@@ -66,7 +66,15 @@ export default function Home() {
     />
   </div>
 
-  <div className="absolute inset-0">
+  <div
+    className="absolute inset-0 md:hidden"
+    style={{
+      background:
+        "radial-gradient(circle at 50% 40%, var(--color-thermal-accent) 0%, transparent 60%), var(--color-bg-base)",
+    }}
+  />
+
+  <div className="absolute inset-0 hidden md:block">
     <Prism
       animationType="rotate"
       height={3.5}
@@ -100,7 +108,7 @@ export default function Home() {
   onClick={() => goTo("sponsors")}
   className="relative min-h-screen overflow-hidden cursor-pointer"
 >
-  <div className="pointer-events-none">
+  <div className="pointer-events-none hidden md:block">
   <Waves
       lineColor="rgba(255,255,255,0.1
       )"
@@ -116,6 +124,12 @@ export default function Home() {
       yGap={34}
     />
   </div>
+  <div
+    className="absolute inset-0 pointer-events-none md:hidden"
+    style={{
+      background: "linear-gradient(180deg, var(--color-bg-base), var(--color-bg-surface))",
+    }}
+  />
   <div className="absolute inset-0">
     <SideRays
       speed={1.5}
@@ -138,7 +152,7 @@ export default function Home() {
 
   {/* text content */}
   <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20">
-    <div className="max-w-md lg:pr-8">
+    <div className="max-w-3xl lg:pr-8">
       <Reveal>
         <h2 className="font-heading text-4xl md:text-5xl text-text-primary mb-8">
           About Dyuthi
@@ -192,7 +206,14 @@ export default function Home() {
       yGap={34}
     />
   </div>
-        <div className="absolute z-0 inset-0">
+        <div
+    className="absolute z-0 inset-0 md:hidden"
+    style={{
+      background:
+        "radial-gradient(circle at 30% 20%, rgba(180,151,207,0.18), transparent 55%), radial-gradient(circle at 80% 80%, rgba(143,227,217,0.12), transparent 55%), var(--color-bg-base)",
+    }}
+  />
+        <div className="absolute z-0 inset-0 hidden md:block">
     <ColorBends
   colors={["#B497CF", "#8FE3D9", "#F5C6E0"]}
   rotation={90}

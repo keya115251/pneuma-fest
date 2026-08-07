@@ -6,6 +6,7 @@ import Reveal from "@/app/components/Reveal";
 import CardSwap, { Card } from "@/app/components/CardSwap";
 import { useNavigationLoading } from "@/app/components/NavigationProvider";
 import Waves from "@/app/components/Waves";
+import TransitionLink from "@/app/components/TransitionLink";
 
 const workshops = [
   {
@@ -45,7 +46,7 @@ export default function EventsPage() {
   const { startLoading } = useNavigationLoading();
 
   return (
-    <main className="h-screen overflow-hidden bg-bg-base pt-10 px-6">
+    <main className="bg-bg-base pt-10 px-6 pb-10 md:pb-0 md:h-screen md:overflow-hidden">
       <div className="pointer-events-none">
   <Waves
       lineColor="rgba(255,255,255,0.1
@@ -62,7 +63,7 @@ export default function EventsPage() {
       yGap={34}
     />
   </div>
-      <div className="grid md:grid-cols-2 gap-8 md:gap-4 h-[calc(100vh-4rem)] overflow-hidden">
+      <div className="grid md:grid-cols-2 gap-8 md:gap-4 md:h-[calc(100vh-4rem)] md:overflow-hidden">
         {/* COMPETITIONS - fans left, anchored near center boundary (default right:0 of this column) */}
         <section className="relative z-10 flex flex-col justify-center">
           <Reveal>
@@ -75,7 +76,7 @@ export default function EventsPage() {
           </Reveal>
           <p className="text-text-muted mb-6 text-center"></p>
 
-          <div style={{ height: "550px", position: "relative" }}>
+          <div className="hidden md:block" style={{ height: "550px", position: "relative" }}>
             <CardSwap
               direction="left"
               skewAmount={-6}
@@ -119,6 +120,34 @@ export default function EventsPage() {
               ))}
             </CardSwap>
           </div>
+
+          <div className="md:hidden space-y-4">
+            {events.map(event => (
+              <TransitionLink
+                key={event.slug}
+                href={`/events/${event.slug}`}
+                className="cursor-target block w-full rounded-2xl overflow-hidden border border-white/10 bg-bg-surface"
+              >
+                <TitleBar label={event.title} />
+                <div className="relative w-full h-56">
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: `url(${event.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                  <div className="relative z-10 h-full flex flex-col items-end justify-end p-4 text-right">
+                    <h3 className="font-heading text-xl text-text-primary">{event.title}</h3>
+                    <p className="text-text-muted">{event.name}</p>
+                    <p className="text-text-muted text-sm">{event.hosts}</p>
+                  </div>
+                </div>
+              </TransitionLink>
+            ))}
+          </div>
         </section>
 
         {/* WORKSHOPS - fans right, anchored near center boundary (left:0 of this column) */}
@@ -132,7 +161,7 @@ export default function EventsPage() {
             </p>
           </Reveal>
           <p className="text-text-muted mb-6 text-center"></p>
-          <div style={{ height: "550px", position: "relative" }}>
+          <div className="hidden md:block" style={{ height: "550px", position: "relative" }}>
             <CardSwap
               className="anchor-left"
               cardDistance={90}
@@ -165,6 +194,32 @@ export default function EventsPage() {
                 </Card>
               ))}
             </CardSwap>
+          </div>
+
+          <div className="md:hidden space-y-4">
+            {workshops.map(workshop => (
+              <div
+                key={workshop.id}
+                className="w-full rounded-2xl overflow-hidden border border-white/10 bg-bg-surface"
+              >
+                <TitleBar label={workshop.title} />
+                <div className="relative w-full h-56">
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: `url(${workshop.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                  <div className="relative z-10 h-full flex flex-col justify-end p-4">
+                    <h3 className="font-heading text-xl text-text-primary">{workshop.title}</h3>
+                    <p className="mt-2 text-text-muted">{workshop.host}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </div>

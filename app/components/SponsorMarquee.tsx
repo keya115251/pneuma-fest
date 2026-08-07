@@ -23,7 +23,7 @@ function MarqueeRow({
         {looped.map((sponsor, i) => (
           <div
             key={i}
-            className="flex-shrink-0 rounded-xl border border-dashed border-white/20 bg-bg-surface px-16 py-12 text-text-primary text-2xl font-medium whitespace-nowrap"
+            className="flex-shrink-0 w-32 md:w-auto rounded-xl border border-dashed border-white/20 bg-bg-surface px-6 py-6 md:px-16 md:py-12 text-text-primary text-sm md:text-2xl font-medium truncate md:overflow-visible md:text-clip md:whitespace-nowrap"
           >
             {sponsor}
           </div>
