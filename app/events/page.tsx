@@ -75,7 +75,7 @@ export default function EventsPage() {
             </p>
           </Reveal>
 
-          <div className="hidden md:block" style={{ height: "550px", position: "relative", top: "-60px" }}>
+          <div className="hidden md:block" style={{ height: "550px", position: "relative", top: "32px" }}>
             <CardSwap
               direction="left"
               skewAmount={-6}
@@ -106,7 +106,7 @@ export default function EventsPage() {
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                      <div className="relative z-10 h-full flex flex-col items-end justify-end p-6 text-right">
+                      <div className="relative z-10 h-full flex flex-col items-end justify-end pt-6 px-6 pb-28 text-right">
                         <h3 className="font-heading text-xl md:text-2xl text-text-primary">
                         {event.title}
                       </h3>
@@ -159,7 +159,7 @@ export default function EventsPage() {
               Running alongside the competitions on both days.
             </p>
           </Reveal>
-          <div className="hidden md:block" style={{ height: "550px", position: "relative", top: "-60px" }}>
+          <div className="hidden md:block" style={{ height: "550px", position: "relative", top: "32px" }}>
             <CardSwap
               className="anchor-left"
               cardDistance={90}
@@ -182,7 +182,7 @@ export default function EventsPage() {
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                    <div className="relative z-10 h-full flex flex-col justify-end p-6">
+                    <div className="relative z-10 h-full flex flex-col justify-end pt-6 px-6 pb-28">
                       <h3 className="font-heading text-xl md:text-2xl text-text-primary">
                         {workshop.title}
                       </h3>
