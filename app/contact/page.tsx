@@ -4,9 +4,9 @@ import LineWaves from "@/app/components/LineWaves";
 const contacts = [
   { name: "Prateek", role: "Overall Coordinator", phone: "+91 8341092826" },
   { name: "Keya", role: "Chaitanya Geethi", phone: "+91 9100753081" },
-  { name: "John Stalin", role: "Vaadya", phone: "+91 7075092911" },
-  { name: "Sudhamayee", role: "UDC", phone: "+91 9494093154" },
-  { name: "Jahnavi", role: "Laasya", phone: "+91 9177832035" },
+  { name: "John Stalin", role: "Chaitanya Vaadya", phone: "+91 7075092911" },
+  { name: "Sudhamayee", role: "United Dance Crew", phone: "+91 9494093154" },
+  { name: "Jahnavi", role: "Chaitanya Laasya", phone: "+91 9177832035" },
 ];
 
 export default function ContactPage() {
@@ -35,7 +35,7 @@ export default function ContactPage() {
             CONTACT US
           </h1>
           <p className="text-text-muted mb-16">
-            Reach out with any questions about Pneuma.
+            Reach out with any questions about Dyuthi.
           </p>
         </Reveal>
 
@@ -48,7 +48,7 @@ export default function ContactPage() {
                 <a href="https://instagram.com/dyuthi.cbit"
                 className="text-thermal-accent hover:underline"
               >
-                @pneuma
+                @dyuthi.cbit
               </a>
             </p>
           </div>
