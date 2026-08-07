@@ -153,7 +153,7 @@ export default function Home() {
   </div>
 
   {/* text content */}
-  <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20">
+  <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20 pt-32">
     <div className="max-w-2xl lg:pr-8">
       <Reveal>
         <h2 className="font-heading text-4xl md:text-5xl text-text-primary mb-8">

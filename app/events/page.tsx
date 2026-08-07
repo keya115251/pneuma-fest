@@ -46,7 +46,7 @@ export default function EventsPage() {
   const { startLoading } = useNavigationLoading();
 
   return (
-    <main className="bg-bg-base pt-10 px-6 pb-10 md:pb-0 md:h-screen md:overflow-hidden">
+    <main className="bg-bg-base pt-32 px-6 pb-10 md:pb-0 md:h-screen md:overflow-hidden">
       <div className="pointer-events-none">
   <Waves
       lineColor="rgba(255,255,255,0.1
@@ -63,7 +63,7 @@ export default function EventsPage() {
       yGap={34}
     />
   </div>
-      <div className="grid md:grid-cols-2 gap-8 md:gap-4 md:h-[calc(100vh-4rem)] md:overflow-hidden">
+      <div className="grid md:grid-cols-2 gap-8 md:gap-4 md:h-[calc(100vh-8rem)] md:overflow-hidden">
         {/* COMPETITIONS - fans left, anchored near center boundary (default right:0 of this column) */}
         <section className="relative z-10 flex flex-col justify-center">
           <Reveal>

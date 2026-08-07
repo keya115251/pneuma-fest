@@ -57,7 +57,7 @@ export default function RegisterForm({
   }
 
   return (
-    <main className="min-h-screen bg-bg-base px-6 py-20">
+    <main className="min-h-screen bg-bg-base px-6 pt-32 pb-20">
       
       
       <div className="max-w-md mx-auto">

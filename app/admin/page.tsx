@@ -20,7 +20,7 @@ export default async function AdminDashboard() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-bg-base px-6 py-16">
+    <main className="min-h-screen bg-bg-base px-6 pt-32 pb-16">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-text-primary mb-1">
           {clubConfig.label} — Registrations
