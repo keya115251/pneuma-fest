@@ -74,18 +74,17 @@ export default function EventsPage() {
               Three flagship competitions, one national stage.
             </p>
           </Reveal>
-          <p className="text-text-muted mb-6 text-center"></p>
 
-          <div className="hidden md:block" style={{ height: "550px", position: "relative" }}>
+          <div className="hidden md:block" style={{ height: "320px", position: "relative" }}>
             <CardSwap
               direction="left"
               skewAmount={-6}
-              cardDistance={90}
-              verticalDistance={100}
+              cardDistance={45}
+              verticalDistance={22}
               delay={4000}
               pauseOnHover={true}
-              width={760}
-              height={560}
+              width={435}
+              height={320}
               onCardClick={(i, isFront) => {
         if (isFront) {
           startLoading();
@@ -160,16 +159,15 @@ export default function EventsPage() {
               Running alongside the competitions on both days.
             </p>
           </Reveal>
-          <p className="text-text-muted mb-6 text-center"></p>
-          <div className="hidden md:block" style={{ height: "550px", position: "relative" }}>
+          <div className="hidden md:block" style={{ height: "320px", position: "relative" }}>
             <CardSwap
               className="anchor-left"
-              cardDistance={90}
-              verticalDistance={100}
+              cardDistance={45}
+              verticalDistance={22}
               delay={4000}
               pauseOnHover={true}
-              width={760}
-              height={560}
+              width={435}
+              height={320}
             >
               {workshops.map(workshop => (
                 <Card key={workshop.id} className="overflow-hidden">
