@@ -2,11 +2,11 @@ import Reveal from "@/app/components/Reveal";
 import LineWaves from "@/app/components/LineWaves";
 
 const contacts = [
-  { name: "[Name]", role: "Overall Coordinator", phone: "+91 [number]" },
-  { name: "[Name]", role: "Chaitanya Geethi", phone: "+91 [number]" },
-  { name: "[Name]", role: "Vaadya", phone: "+91 [number]" },
-  { name: "[Name]", role: "UDC", phone: "+91 [number]" },
-  { name: "[Name]", role: "Laasya", phone: "+91 [number]" },
+  { name: "Prateek", role: "Overall Coordinator", phone: "+91 8341092826" },
+  { name: "Keya", role: "Chaitanya Geethi", phone: "+91 9100753081" },
+  { name: "John Stalin", role: "Vaadya", phone: "+91 7075092911" },
+  { name: "Sudhamayee", role: "UDC", phone: "+91 9494093154" },
+  { name: "Jahnavi", role: "Laasya", phone: "+91 9177832035" },
 ];
 
 export default function ContactPage() {
@@ -41,19 +41,11 @@ export default function ContactPage() {
 
         <Reveal delay={0.1}>
           <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-8">
-            <p className="text-text-muted">
-              Email:{" "}
-              
-                <a href="mailto:pneuma@cbit.ac.in"
-                className="text-thermal-accent hover:underline"
-              >
-                pneuma@cbit.ac.in
-              </a>
-            </p>
+            
             <p className="text-text-muted mt-2">
               Instagram:{" "}
               
-                <a href="https://instagram.com/pneuma"
+                <a href="https://instagram.com/dyuthi.cbit"
                 className="text-thermal-accent hover:underline"
               >
                 @pneuma
