@@ -1,0 +1,116 @@
+export type EventCategory = {
+  type: "solo" | "group" | "open" | "college";
+  teamSize: { min: number | null; max: number | null } | null;
+};
+export type FestEvent = {
+  slug: string;
+  title: string;
+  name: string;
+  hosts: string;
+  format: "band-only" | "solo-and-group" | "single";
+  categories: EventCategory[] | null;
+  eligibility: string;
+  prize: string;
+  rules: string;
+  description: string;
+  image: string;
+  bandSize?: { min: number; max: number };
+  submissionFormat?: string;
+  selectionCount?: number;
+  performanceTime?: string;
+  setupTime?: string;
+  rulesPdf?: string;
+  themeColors?: string[];
+  decorImages?: {
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+  };
+  crewSize?: { min: number; max: number };
+  competitionCategories?: string[];
+  ageGroups?: string[];
+  danceForms?: string[];
+  maxGroupSize?: number;
+  round2Open?: boolean;
+};
+
+export const events: FestEvent[] = [
+  {
+  slug: "battle-of-the-bands",
+  title: "Veni, Vidi, Vici.",
+  name: "Battle of the Bands",
+  hosts: "Chaitanya Geethi x Vaadya",
+  format: "band-only",
+  categories: null,
+  eligibility: "Open to all colleges and schools",
+  prize: "₹1,00,000",
+  rules: "All rock-adjacent genres welcome (fusion, metal, prog, etc).",
+  description: "",
+  image: "/events/battle-of-the-bands.jpg",
+  bandSize: { min: 3, max: 10 },
+  submissionFormat: "Online video submission (5–6 min max)",
+  selectionCount: 20,
+  performanceTime: "20 minutes",
+  setupTime: "10 minutes (soundcheck + setup)",
+  rulesPdf: "#",
+  themeColors: ["#B497CF", "#4d3dff", "#C9A0F5"],
+  decorImages: {
+    topLeft: "/decor/guitar.png",
+    bottomRight: "/decor/drums.png",
+  },
+  round2Open: false, // flip to true once Round 2 goes live
+},
+  {
+    slug: "hip-hop-dance",
+    title: "3T's",
+    name: "Hip Hop Dance",
+    hosts: "UDC",
+    format: "single",
+    categories: null,
+    eligibility: "Open to all colleges and schools",
+    prize: "₹1,00,000",
+    rules: "",
+    description: "",
+    image: "/events/hip-hop-dance.jpg",
+    rulesPdf: "#",
+    crewSize: { min: 8, max: 20 },
+    competitionCategories: ["Open Crew", "College Crew"],
+    themeColors: ["#4d3dff", "#7FB8FF", "#8FE3D9"],
+    decorImages: {
+      topLeft: "/decor/dancer-side.png",
+      bottomRight: "/decor/dancer-freeze.png",
+    },
+  },
+  {
+    slug: "classical-dance",
+    title: "Aangikam",
+    name: "Classical Dance",
+    hosts: "Chaitanya Laasya",
+    format: "single",
+    categories: null,
+    eligibility: "Open to all colleges and schools",
+    prize: "₹1,00,000",
+    rules: "",
+    description: "",
+    image: "/events/classical-dance.jpg",
+    rulesPdf: "#",
+    ageGroups: ["Junior (up to 10th grade)", "Senior (11th grade onward)"],
+    danceForms: [
+      "Kuchipudi",
+      "Bharatanatyam",
+      "Kathak",
+      "Kathakali",
+      "Mohiniyattam",
+      "Odissi",
+      "Manipuri",
+      "Sattriya",
+    ],
+    maxGroupSize: 10,
+    themeColors: ["#F5C6E0", "#E888C4", "#B497CF"],
+    decorImages: {
+      bottomLeft: "/decor/ghungroo.png",
+      topRight: "/decor/hands.png",
+    },
+  },
+];

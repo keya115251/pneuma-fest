@@ -1,0 +1,54 @@
+.card-swap-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(-15%, 20%);
+  transform-origin: bottom right;
+
+  perspective: 900px;
+  overflow: visible;
+}
+
+/* Pure anchor-side change, no scaling. Use this for a stack that should
+   anchor near the LEFT edge of its own section (e.g. so it sits near
+   the shared boundary between two side-by-side columns) instead of the
+   default right edge. Combine with the `direction` prop on CardSwap to
+   control which way the fan-out offsets go. */
+.card-swap-container.anchor-left {
+  right: auto;
+  left: 0;
+  transform: translate(15%, 20%);
+  transform-origin: bottom left;
+}
+
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 12px;
+  border: 1px solid #fff;
+  background: #000;
+
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  .card-swap-container {
+    transform: scale(0.75) translate(25%, 25%);
+  }
+  .card-swap-container.anchor-left {
+    transform: scale(0.75) translate(-25%, 25%);
+  }
+}
+
+@media (max-width: 480px) {
+  .card-swap-container {
+    transform: scale(0.55) translate(25%, 25%);
+  }
+  .card-swap-container.anchor-left {
+    transform: scale(0.55) translate(-25%, 25%);
+  }
+}
