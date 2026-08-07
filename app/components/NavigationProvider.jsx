@@ -13,7 +13,13 @@ export function useNavigationLoading() {
 // Safety cap: if pathname doesn't change (same-page link, hash link,
 // double click, etc.) the loader would otherwise never clear and would
 // block every subsequent click since it's a full-screen fixed overlay.
-const MAX_LOADING_MS = 4000;
+// This is a last-resort backstop, not the normal way navigation clears the
+// loader (that's the pathname effect below, which fires as soon as the
+// route actually changes). It must stay well above real navigation time —
+// slower devices/networks can legitimately take several seconds - or it'll
+// hide the overlay while a real navigation is still in flight, making the
+// page look stuck on the old content until the new one suddenly pops in.
+const MAX_LOADING_MS = 15000;
 
 export function NavigationProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);

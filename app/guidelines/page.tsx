@@ -7,7 +7,7 @@ const sections = [
     points: [
       "Open to all colleges and schools nationwide.",
       "Participants must carry a valid, original college/school ID card at all times during the fest for verification. No entry without ID.",
-      "Registration closes on [DATE] — no on-spot registrations will be entertained for competitions.",
+      "Registrations close on 10th September, 2026 — no on-spot registrations will be entertained for competitions.",
       "Only one entry per category is allowed from each institution unless otherwise specified for a competition.",
       "Each participating team/contingent should ideally have one point of contact responsible for coordination with organizers.",
       "The organizing committee reserves the right to alter the schedule, venue, or format of any event due to unavoidable circumstances, with prior notice where possible.",
