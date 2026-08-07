@@ -138,7 +138,7 @@ export default function Home() {
 
   {/* text content */}
   <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20">
-    <div className="max-w-4xl lg:pr-[100px]">
+    <div className="max-w-4xl lg:pr-[750px]">
       <Reveal>
         <h2 className="font-heading text-4xl md:text-5xl text-text-primary mb-8">
           About Dyuthi

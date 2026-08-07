@@ -7,9 +7,9 @@ type Photo = {
 };
 
 const photosCol1: Photo[] = [
-  { src: "/gallery/photo1.jpg" },
+  { src: "/gallery/photo1.JPG" },
   { src: "/gallery/photo2.jpeg" },
-  { src: "/gallery/photo3.jpg" },
+  { src: "/gallery/photo3.JPG" },
   { src: "/gallery/photo4.jpeg" },
 ];
 
