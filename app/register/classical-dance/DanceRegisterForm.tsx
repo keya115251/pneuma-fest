@@ -11,6 +11,7 @@ type Participant = {
   email: string;
   age: string;
   institution: string;
+  sameAsHead: boolean;
   idProof: File | null;
 };
 
@@ -20,6 +21,7 @@ const emptyParticipant = (): Participant => ({
   email: "",
   age: "",
   institution: "",
+  sameAsHead: false,
   idProof: null,
 });
 
@@ -64,10 +66,17 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
   function updateParticipant(
     index: number,
     field: keyof Participant,
-    value: string | File | null
+    value: string | File | null | boolean
   ) {
     setParticipants((prev) =>
-      prev.map((p, i) => (i === index ? { ...p, [field]: value } : p))
+      prev.map((p, i) => {
+        if (i !== index) return p;
+        const updated = { ...p, [field]: value };
+        if (field === "sameAsHead" && value === true) {
+          updated.institution = prev[0].institution;
+        }
+        return updated;
+      })
     );
   }
 
@@ -203,7 +212,7 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
 
       <div className="relative z-10 max-w-2xl mx-auto">
         <h1 className="font-heading text-4xl text-text-primary mb-2">
-          Register — {event.name}
+          Register — {event.title}
         </h1>
         <p className="text-text-muted mb-10">
           {step === "details" && "Performance details"}
@@ -437,7 +446,10 @@ function ParticipantCard({
   isHead: boolean;
   isSolo: boolean;
   onToggle: () => void;
-  onChange: (field: keyof Participant, value: string | File | null) => void;
+  onChange: (
+    field: keyof Participant,
+    value: string | File | null | boolean
+  ) => void;
   onRemove: () => void;
   canRemove: boolean;
 }) {
@@ -500,11 +512,34 @@ function ParticipantCard({
             </>
           )}
 
-          <Input
-            label="Institution"
-            value={participant.institution}
-            onChange={(v) => onChange("institution", v)}
-          />
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-text-muted text-sm">
+                Institution
+              </label>
+              {!isHead && !isSolo && (
+                <label className="flex items-center gap-2 text-text-muted text-xs">
+                  <input
+                    type="checkbox"
+                    checked={participant.sameAsHead}
+                    onChange={(e) => onChange("sameAsHead", e.target.checked)}
+                    className="cursor-target w-5 h-5"
+                  />
+                  Same as Group Leader
+                </label>
+              )}
+            </div>
+            <p className="text-text-muted text-xs mb-1">
+              Graduated or no current institution? Enter &quot;N/A&quot;.
+            </p>
+            <input
+              type="text"
+              value={participant.institution}
+              onChange={(e) => onChange("institution", e.target.value)}
+              disabled={!isHead && participant.sameAsHead}
+              className="cursor-target w-full rounded-lg bg-bg-surface border border-white/10 px-4 py-2 text-text-primary focus:border-thermal-accent outline-none disabled:bg-thermal-accent/60 disabled:text-bg-base/70"
+            />
+          </div>
 
           <div>
             <label className="block text-text-muted text-sm mb-1">

@@ -10,7 +10,8 @@ import SponsorMarquee from "./components/SponsorMarquee";
 import PhotoFilmStrip from "./components/PhotoFilmStrip";
 import SideRays from "./components/SideRays";
 import ColorBends from './components/ColorBends';
-  
+import { SPONSORS_ENABLED } from "./lib/siteConfig";
+
 
 const calendar = [
   {
@@ -18,15 +19,15 @@ const calendar = [
     slots: [
       { time: "Morning", event: "Aangikam", host: "Chaitanya Laasya" },
       { time: "Evening", event: "3T's (Time to Tap)", host: "UDC" },
-      { time: "Parallel", event: "Workshop / Celebrity Session", host: "Chaitanya Geethi x Vaadya" },
+      { time: "Parallel", event: "Workshop / Celebrity Session", host: "Chaitanya Geethi x Vaadya", tba: true },
     ],
   },
   {
     day: "Day 2",
     slots: [
       { time: "Main Event", event: "Veni, Vidi, Vici.", host: "Chaitanya Geethi x Vaadya" },
-      { time: "Parallel", event: "Workshop / Celebrity Session 1", host: "UDC" },
-      { time: "Parallel", event: "Workshop / Celebrity Session 2", host: "Chaitanya Laasya" },
+      { time: "Parallel", event: "Workshop / Celebrity Session 1", host: "UDC", tba: true },
+      { time: "Parallel", event: "Workshop / Celebrity Session 2", host: "Chaitanya Laasya", tba: true },
     ],
   },
 ];
@@ -44,6 +45,8 @@ export default function Home() {
   function goTo(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }
+
+  const afterAboutId = SPONSORS_ENABLED ? "sponsors" : "calendar";
 
   return (
     <main className="bg-bg-base">
@@ -107,10 +110,10 @@ export default function Home() {
 
 <section
   id="about"
-  onClick={() => goTo("sponsors")}
+  onClick={() => goTo(afterAboutId)}
   className="relative min-h-screen overflow-hidden cursor-pointer"
 >
-  <div className="pointer-events-none hidden md:block">
+  <div className="pointer-events-none">
   <Waves
       lineColor="rgba(255,255,255,0.1
       )"
@@ -126,13 +129,7 @@ export default function Home() {
       yGap={34}
     />
   </div>
-  <div
-    className="absolute inset-0 pointer-events-none md:hidden"
-    style={{
-      background: "linear-gradient(180deg, var(--color-bg-base), var(--color-bg-surface))",
-    }}
-  />
-  <div className="absolute inset-0">
+  <div className="absolute inset-0 hidden md:block">
     <SideRays
       speed={1.5}
       rayColor1="#B497CF"
@@ -182,11 +179,12 @@ export default function Home() {
     </div>
   </div>
 
-  <ScrollArrow targetId="sponsors" direction="down" />
+  <ScrollArrow targetId={afterAboutId} direction="down" />
 </section>
 
 
       {/* SPONSORS */}
+      {SPONSORS_ENABLED && (
       <section
         id="sponsors"
         onClick={() => goTo("calendar")}
@@ -208,13 +206,6 @@ export default function Home() {
       yGap={34}
     />
   </div>
-        <div
-    className="absolute z-0 inset-0 md:hidden"
-    style={{
-      background:
-        "radial-gradient(circle at 30% 20%, rgba(180,151,207,0.18), transparent 55%), radial-gradient(circle at 80% 80%, rgba(143,227,217,0.12), transparent 55%), var(--color-bg-base)",
-    }}
-  />
         <div className="absolute z-0 inset-0 hidden md:block">
     <ColorBends
   colors={["#B497CF", "#8FE3D9", "#F5C6E0"]}
@@ -233,7 +224,7 @@ export default function Home() {
   autoRotate={0}
 />
   </div>
-        
+
         <Reveal className="relative z-10">
           <p className="text-center text-text-muted text-sm uppercase tracking-widest mb-2">
             Partners
@@ -249,6 +240,7 @@ export default function Home() {
 
         <ScrollArrow targetId="calendar" direction="down" />
       </section>
+      )}
 
       {/* EVENT CALENDAR */}
 <section id="calendar" className="relative px-6 py-32 overflow-visible">
@@ -291,6 +283,11 @@ export default function Home() {
                   <div>
                     <p className="text-text-primary font-medium">
                       {slot.event}
+                      {slot.tba && (
+                        <span className="ml-2 text-text-muted text-xs italic">
+                          To be announced
+                        </span>
+                      )}
                     </p>
                     <p className="text-text-muted text-sm">{slot.host}</p>
                   </div>

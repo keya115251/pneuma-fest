@@ -186,6 +186,7 @@ export default function EventsPage() {
                       <h3 className="font-heading text-xl md:text-2xl text-text-primary">
                         {workshop.title}
                       </h3>
+                      <p className="text-text-muted text-sm italic">To be announced</p>
                       <p className="mt-2 text-text-muted">{workshop.host}</p>
                     </div>
                   </div>
@@ -213,6 +214,7 @@ export default function EventsPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                   <div className="relative z-10 h-full flex flex-col justify-end p-4">
                     <h3 className="font-heading text-xl text-text-primary">{workshop.title}</h3>
+                    <p className="text-text-muted text-sm italic">To be announced</p>
                     <p className="mt-2 text-text-muted">{workshop.host}</p>
                   </div>
                 </div>

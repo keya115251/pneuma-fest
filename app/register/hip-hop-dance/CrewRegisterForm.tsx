@@ -9,6 +9,7 @@ type Member = {
   name: string;
   phone: string;
   email: string;
+  age: string;
   institution: string;
   sameAsPoc: boolean;
   idProof: File | null;
@@ -18,6 +19,7 @@ const emptyMember = (): Member => ({
   name: "",
   phone: "",
   email: "",
+  age: "",
   institution: "",
   sameAsPoc: false,
   idProof: null,
@@ -86,7 +88,7 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
   const canProceedToPayment =
     members.length >= MIN_MEMBERS &&
     members.every(
-      (m) => m.name && m.phone && m.email && m.institution && m.idProof
+      (m) => m.name && m.phone && m.email && m.age && m.institution && m.idProof
     ) &&
     performanceDuration &&
     (!propsUsed || propsDetails) &&
@@ -151,6 +153,7 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
             name: m.name,
             phone: m.phone,
             email: m.email,
+            age: m.age ? parseInt(m.age) : null,
             institution: m.institution,
             id_proof_url: idPath,
             is_leader: i === 0,
@@ -203,7 +206,7 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
 
       <div className="relative z-10 max-w-2xl mx-auto">
         <h1 className="font-heading text-4xl text-text-primary mb-2">
-          Register — {event.name}
+          Register — {event.title}
         </h1>
         <p className="text-text-muted mb-10">
           {step === "groupInfo" && "Crew details"}
@@ -452,7 +455,12 @@ function MemberCard({
   canRemove: boolean;
 }) {
   const isFilled =
-    member.name && member.phone && member.email && member.institution && member.idProof;
+    member.name &&
+    member.phone &&
+    member.email &&
+    member.age &&
+    member.institution &&
+    member.idProof;
 
   return (
     <div className="rounded-xl border border-white/10 bg-bg-surface overflow-hidden">
@@ -492,6 +500,12 @@ function MemberCard({
             value={member.email}
             onChange={(v) => onChange("email", v)}
           />
+          <Input
+            label="Age"
+            type="number"
+            value={member.age}
+            onChange={(v) => onChange("age", v)}
+          />
 
 <div>
   <div className="flex items-center justify-between mb-1">
@@ -508,6 +522,9 @@ function MemberCard({
       </label>
     )}
   </div>
+  <p className="text-text-muted text-xs mb-1">
+    Graduated or no current institution? Enter &quot;N/A&quot;.
+  </p>
   <input
     type="text"
     value={member.institution}

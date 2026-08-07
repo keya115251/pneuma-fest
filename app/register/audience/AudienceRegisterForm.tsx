@@ -127,6 +127,7 @@ export default function AudienceRegisterForm() {
                 label="Institution"
                 value={institution}
                 onChange={setInstitution}
+                hint='Graduated or no current institution? Enter "N/A".'
               />
               <PhoneInput value={phone} onChange={setPhone} />
               <Input
@@ -220,15 +221,18 @@ function Input({
   value,
   onChange,
   type = "text",
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
+  hint?: string;
 }) {
   return (
     <div>
       <label className="block text-text-muted text-sm mb-1">{label}</label>
+      {hint && <p className="text-text-muted text-xs mb-1">{hint}</p>}
       <input
         type={type}
         value={value}

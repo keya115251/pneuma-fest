@@ -450,6 +450,9 @@ function ParticipantCard({
                 </label>
               )}
             </div>
+            <p className="text-text-muted text-xs mb-1">
+              Graduated or no current institution? Enter &quot;N/A&quot;.
+            </p>
             <input
               type="text"
               value={participant.institution}

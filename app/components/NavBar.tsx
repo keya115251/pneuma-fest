@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import TransitionLink from "@/app/components/TransitionLink";
 import { motion, AnimatePresence } from "framer-motion";
+import { SPONSORS_ENABLED } from "@/app/lib/siteConfig";
 
 const navLinks = [
   { label: "About", href: "/#about" },
   { label: "Events", href: "/events" },
   { label: "Schedule", href: "/#calendar" },
-  { label: "Sponsors", href: "/#sponsors" },
+  ...(SPONSORS_ENABLED ? [{ label: "Sponsors", href: "/#sponsors" }] : []),
   { label: "Guidelines", href: "/guidelines" },
 ];
 

@@ -146,7 +146,7 @@ const canProceedToPayment =
 
       <div className="relative z-10 max-w-2xl mx-auto">
         <h1 className="font-heading text-4xl text-text-primary mb-2">
-          Register — Battle of the Bands
+          Register — Veni, Vidi, Vici.
         </h1>
         <p className="text-text-muted mb-10">
           {step === "details" && "Round 1 — Entry Details"}
@@ -203,6 +203,7 @@ const canProceedToPayment =
                 label="Institution"
                 value={pocInstitution}
                 onChange={setPocInstitution}
+                hint='Graduated or no current institution? Enter "N/A".'
               />
 
               <div>
@@ -310,15 +311,18 @@ function Input({
   value,
   onChange,
   type = "text",
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
+  hint?: string;
 }) {
   return (
     <div>
       <label className="block text-text-muted text-sm mb-1">{label}</label>
+      {hint && <p className="text-text-muted text-xs mb-1">{hint}</p>}
       <input
         type={type}
         value={value}
