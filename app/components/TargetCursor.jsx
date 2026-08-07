@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { gsap } from 'gsap';
 import './TargetCursor.css';
@@ -53,14 +53,20 @@ const TargetCursor = ({
 
   const pathname = usePathname();
 
-  const isMobile = useMemo(() => {
-    if (typeof window === 'undefined') return false;
+  // Default to true (mobile/hidden) so the server-rendered markup and the client's
+  // very first render agree — there's no `window` on the server to check. Only after
+  // mount do we measure the real environment and possibly reveal the cursor. This
+  // avoids a hydration mismatch that would otherwise leave a stray cursor element
+  // stuck at its unpositioned default (top-left) spot on mobile.
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
     const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth <= 768;
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
     const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
-    return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
+    setIsMobile((hasTouchScreen && isSmallScreen) || isMobileUserAgent);
   }, []);
 
   const constants = useMemo(

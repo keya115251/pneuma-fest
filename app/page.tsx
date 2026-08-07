@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import TransitionLink from "@/app/components/TransitionLink";
 import Prism from "./components/Prism";
 import Waves from "./components/Waves";
@@ -31,6 +32,15 @@ const calendar = [
 ];
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   function goTo(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }
@@ -66,20 +76,12 @@ export default function Home() {
     />
   </div>
 
-  <div
-    className="absolute inset-0 md:hidden"
-    style={{
-      background:
-        "radial-gradient(circle at 50% 40%, var(--color-thermal-accent) 0%, transparent 60%), var(--color-bg-base)",
-    }}
-  />
-
-  <div className="absolute inset-0 hidden md:block">
+  <div className="absolute inset-0">
     <Prism
       animationType="rotate"
-      height={3.5}
-      baseWidth={5.5}
-      scale={3.6}
+      height={isMobile ? 2 : 3.5}
+      baseWidth={isMobile ? 3.2 : 5.5}
+      scale={isMobile ? 2.4 : 3.6}
       hueShift={160}
       colorFrequency={0.4}
       colorSaturation={0.35}
@@ -152,7 +154,7 @@ export default function Home() {
 
   {/* text content */}
   <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20">
-    <div className="max-w-3xl lg:pr-8">
+    <div className="max-w-2xl lg:pr-8">
       <Reveal>
         <h2 className="font-heading text-4xl md:text-5xl text-text-primary mb-8">
           About Dyuthi
@@ -232,7 +234,7 @@ export default function Home() {
 />
   </div>
         
-        <Reveal>
+        <Reveal className="relative z-10">
           <p className="text-center text-text-muted text-sm uppercase tracking-widest mb-2">
             Partners
           </p>
@@ -241,7 +243,7 @@ export default function Home() {
           </h2>
         </Reveal>
 
-        <Reveal delay={0.1} className="w-full">
+        <Reveal delay={0.1} className="relative z-10 w-full">
           <SponsorMarquee />
         </Reveal>
 
