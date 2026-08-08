@@ -5,22 +5,17 @@ const amenities = [
   {
     title: "Accommodation",
     description:
-      "Details on outstation participant accommodation will be listed here — hostel availability, booking process, cost.",
+      "Details on outstation participant accommodation will be listed here soon.",
   },
   {
     title: "Food & Refreshments",
     description:
-      "Information on meal arrangements, food stalls, and dietary options during the fest.",
+      "A list of food and other stalls will be updated here within the next two weeks.",
   },
   {
     title: "First Aid & Medical",
     description:
-      "On-campus medical support details and emergency contact information.",
-  },
-  {
-    title: "Instrument & Equipment Access",
-    description:
-      "What's provided on-stage (amps, drum kits, sound systems) versus what participants need to bring themselves.",
+      "On-campus medical support details and emergency contact information will be added a few days before the event.",
   },
 ];
 
@@ -50,7 +45,7 @@ export default function AmenitiesPage() {
             AMENITIES
           </h1>
           <p className="text-text-muted mb-16">
-            Everything you need to know for a comfortable stay at Pneuma.
+            Everything you need to know for a comfortable stay at Dyuthi.
           </p>
         </Reveal>
 

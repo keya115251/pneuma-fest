@@ -4,7 +4,7 @@ import LineWaves from "@/app/components/LineWaves";
 export default function LocationPage() {
   return (
     <main className="relative min-h-screen bg-bg-base px-6 pt-32 pb-20 overflow-hidden">
-  <div className="absolute inset-0 z-0 opacity-20">
+  <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
     <LineWaves
       speed={0.3}
       innerLineCount={32}
@@ -26,7 +26,9 @@ export default function LocationPage() {
           <h1 className="font-heading text-4xl md:text-5xl text-text-primary mb-4">
             LOCATION
           </h1>
-          <p className="text-text-muted mb-16">Find your way to Pneuma.</p>
+          <p className="text-text-muted mb-16">
+            Everything you need to find your way to Dyuthi.
+          </p>
         </Reveal>
 
         <Reveal delay={0.1}>
@@ -37,7 +39,7 @@ export default function LocationPage() {
             <p className="text-text-muted leading-relaxed">
               Chaitanya Bharathi Institute of Technology (CBIT)
               <br />
-              Osman Sagar Road, Kokapet, Gandipet, Hyderabad, Telangana — 500075
+              Osman Sagar Road, Kokapet, Gandipet, Hyderabad, Telangana, 500075
             </p>
           </div>
         </Reveal>
@@ -65,10 +67,9 @@ export default function LocationPage() {
                 By Air
               </h3>
               <p className="text-text-muted leading-relaxed">
-                Rajiv Gandhi International Airport (Shamshabad) is the
-                nearest airport, about 13–15 km from campus. Cabs and
-                app-based rides take roughly 25–30 minutes depending on
-                traffic.
+                Rajiv Gandhi International Airport (Shamshabad) is about
+                30 km from campus. Thanks to the Outer Ring Road, cabs
+                and app-based rides typically take 30 to 40 minutes.
               </p>
             </div>
 
@@ -77,11 +78,14 @@ export default function LocationPage() {
                 By Train
               </h3>
               <p className="text-text-muted leading-relaxed">
-                Hyderabad Deccan (Nampally) and Secunderabad Railway
-                Stations are the most convenient stations, each about
-                20–25 km away. From either station, a cab or auto to
-                campus takes approximately 45 minutes to an hour
-                depending on traffic.
+                Secunderabad Railway Station is about 30 km away, and
+                Hyderabad Deccan (Nampally) is about 20 to 25 km away.
+                From either, expect 1 to 1.5 hours by cab or auto
+                depending on traffic. Both stations sit right beside
+                their own metro stops, Secunderabad East/West and
+                Nampally, so hopping onto the Hyderabad Metro toward
+                Lakdikapul or Mehdipatnam can be a faster, more
+                predictable alternative during peak hours.
               </p>
             </div>
 
@@ -90,12 +94,15 @@ export default function LocationPage() {
                 By Bus
               </h3>
               <p className="text-text-muted leading-relaxed">
-                TSRTC city buses (including routes 505 and 220J) connect
-                to the CBIT bus stop, right outside campus. From
-                Mehdipatnam, buses like the 5M run directly to CBIT. If
-                arriving at Mehdipatnam Bus Station from other parts of
-                the city, it&apos;s an easy last-mile connection from
-                there.
+                TSRTC city buses, including routes 505 and 220J, stop
+                right outside campus at the CBIT bus stop. From
+                Mehdipatnam, the 5M runs directly to CBIT, and it&apos;s
+                an easy last-mile connection if you&apos;re arriving at
+                Mehdipatnam Bus Station from elsewhere in the city.
+                Lakdikapul is the nearest metro station to
+                Mehdipatnam, about a 15 minute walk, making it a
+                convenient interchange point if you&apos;re coming from
+                elsewhere on the metro network.
               </p>
             </div>
 
@@ -104,12 +111,12 @@ export default function LocationPage() {
                 By Road / Cab
               </h3>
               <p className="text-text-muted leading-relaxed">
-                CBIT is located on Osman Sagar Road in Gandipet, close to
-                the Financial District. App-based cabs and autos are
-                readily available from most parts of Hyderabad. If
+                CBIT sits on Osman Sagar Road in Gandipet, close to the
+                Financial District, with app-based cabs and autos
+                available from most parts of Hyderabad. If you&apos;re
                 driving, on-campus parking will be available for
-                participants and attendees — details closer to the
-                event.
+                participants and attendees, with details shared closer
+                to the event.
               </p>
             </div>
           </div>

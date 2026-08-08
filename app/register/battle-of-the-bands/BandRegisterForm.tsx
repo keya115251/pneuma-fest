@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import Waves from "@/app/components/Waves";
+import { PAYMENT_REQUIRED } from "@/app/lib/config";
 
 const ROUND1_FEE = 100;
 
@@ -24,8 +25,13 @@ export default function BandRegisterForm() {
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(
     null
   );
+  const [payeeName, setPayeeName] = useState("");
+  const [payeePhone, setPayeePhone] = useState("");
+  const [utrReference, setUtrReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const pocIdProofId = useId();
+  const paymentScreenshotId = useId();
 
   const memberCountNum = parseInt(memberCount);
 const isValidMemberCount =
@@ -52,7 +58,7 @@ const canProceedToPayment =
   }
 
   async function handleSubmit() {
-    if (!paymentScreenshot) {
+    if (PAYMENT_REQUIRED && !paymentScreenshot) {
       setError("Please upload your payment screenshot.");
       return;
     }
@@ -75,6 +81,10 @@ const canProceedToPayment =
           poc_institution: pocInstitution,
           amount_paid: ROUND1_FEE,
           status: "pending",
+          payment_pending: !paymentScreenshot,
+          payee_name: payeeName,
+          payee_phone: payeePhone,
+          utr_reference: utrReference,
         })
         .select()
         .single();
@@ -90,12 +100,14 @@ const canProceedToPayment =
           .eq("id", registration.id);
       }
 
-      const paymentPath = `${registration.id}/payment-screenshot-${paymentScreenshot.name}`;
-      await uploadFile(paymentScreenshot, paymentPath);
-      await supabase
-        .from("band_registrations")
-        .update({ payment_screenshot_url: paymentPath })
-        .eq("id", registration.id);
+      if (paymentScreenshot) {
+        const paymentPath = `${registration.id}/payment-screenshot-${paymentScreenshot.name}`;
+        await uploadFile(paymentScreenshot, paymentPath);
+        await supabase
+          .from("band_registrations")
+          .update({ payment_screenshot_url: paymentPath })
+          .eq("id", registration.id);
+      }
 
       setStep("done");
     } catch (err: any) {
@@ -207,7 +219,7 @@ const canProceedToPayment =
               />
 
               <div>
-                <label className="block text-text-muted text-sm mb-1">
+                <label htmlFor={pocIdProofId} className="block text-text-muted text-sm mb-1">
                   Identity Proof (PDF or PNG)
                 </label>
                 <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
@@ -218,6 +230,7 @@ const canProceedToPayment =
                     {pocIdProof ? "Change" : "Upload"}
                   </span>
                   <input
+                    id={pocIdProofId}
                     type="file"
                     accept="application/pdf,image/png"
                     onChange={(e) =>
@@ -241,46 +254,78 @@ const canProceedToPayment =
 
         {step === "payment" && (
           <>
-            <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6">
-              <p className="text-text-muted text-sm uppercase tracking-wide mb-1">
-                Round 1 Entry Fee
-              </p>
-              <p className="text-text-primary text-3xl font-semibold">
-                ₹{ROUND1_FEE}
-              </p>
-              <p className="text-text-muted text-sm mt-1">Flat fee per band</p>
-            </div>
+            {PAYMENT_REQUIRED ? (
+              <>
+                <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6">
+                  <p className="text-text-muted text-sm uppercase tracking-wide mb-1">
+                    Round 1 Entry Fee
+                  </p>
+                  <p className="text-text-primary text-3xl font-semibold">
+                    ₹{ROUND1_FEE}
+                  </p>
+                  <p className="text-text-muted text-sm mt-1">Flat fee per band</p>
+                </div>
 
-            <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6 flex flex-col items-center">
-              <p className="text-text-muted text-sm mb-4">Scan to pay</p>
-              <div className="w-48 h-48 bg-white/10 border border-dashed border-white/20 rounded-lg flex items-center justify-center text-text-muted text-sm">
-                QR Placeholder
+                <div className="rounded-2xl border border-white/10 bg-bg-surface p-4 mb-6 flex flex-col items-center">
+                  <p className="text-text-muted text-sm mb-4">Scan to pay</p>
+                  <img
+                    src="/payment-qr.png"
+                    alt="Payment QR code"
+                    className="w-72 sm:w-80 h-auto rounded-lg object-contain"
+                  />
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  <Input label="Payee Name" value={payeeName} onChange={setPayeeName} />
+                  <Input
+                    label="Payee Mobile Number"
+                    type="tel"
+                    value={payeePhone}
+                    onChange={setPayeePhone}
+                  />
+                  <Input
+                    label="UTR / Transaction Reference Number"
+                    value={utrReference}
+                    onChange={setUtrReference}
+                    hint="Found in your UPI app's payment confirmation or transaction history."
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <label htmlFor={paymentScreenshotId} className="block text-text-muted text-sm mb-1">
+                    Payment Screenshot
+                  </label>
+                  <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
+                    <span className="text-text-muted text-sm truncate">
+                      {paymentScreenshot
+                        ? paymentScreenshot.name
+                        : "Click to upload screenshot"}
+                    </span>
+                    <span className="text-thermal-accent text-sm flex-shrink-0 ml-3">
+                      {paymentScreenshot ? "Change" : "Upload"}
+                    </span>
+                    <input
+                      id={paymentScreenshotId}
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={(e) =>
+                        setPaymentScreenshot(e.target.files?.[0] || null)
+                      }
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </>
+            ) : (
+              <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6">
+                <h2 className="text-text-primary text-xl font-semibold mb-2">
+                  Payment link coming soon
+                </h2>
+                <p className="text-text-muted text-sm">
+                  We&apos;ll send you a payment link via email and WhatsApp next week to complete your registration. No action needed from you right now.
+                </p>
               </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-text-muted text-sm mb-1">
-                Payment Screenshot
-              </label>
-              <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
-                <span className="text-text-muted text-sm truncate">
-                  {paymentScreenshot
-                    ? paymentScreenshot.name
-                    : "Click to upload screenshot"}
-                </span>
-                <span className="text-thermal-accent text-sm flex-shrink-0 ml-3">
-                  {paymentScreenshot ? "Change" : "Upload"}
-                </span>
-                <input
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={(e) =>
-                    setPaymentScreenshot(e.target.files?.[0] || null)
-                  }
-                  className="hidden"
-                />
-              </label>
-            </div>
+            )}
 
             {error && <p className="text-thermal-accent text-sm mb-4">{error}</p>}
 
@@ -293,7 +338,14 @@ const canProceedToPayment =
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={
+                  submitting ||
+                  (PAYMENT_REQUIRED &&
+                    (!paymentScreenshot ||
+                      !payeeName ||
+                      !payeePhone ||
+                      !utrReference))
+                }
                 className="flex-1 px-8 py-3 rounded-full bg-thermal-accent text-bg-base font-semibold hover:opacity-90 transition-opacity disabled:bg-thermal-accent/60 disabled:text-bg-base/70"
               >
                 {submitting ? "Submitting..." : "Submit Registration"}
@@ -319,11 +371,13 @@ function Input({
   type?: string;
   hint?: string;
 }) {
+  const inputId = useId();
   return (
     <div>
-      <label className="block text-text-muted text-sm mb-1">{label}</label>
+      <label htmlFor={inputId} className="block text-text-muted text-sm mb-1">{label}</label>
       {hint && <p className="text-text-muted text-xs mb-1">{hint}</p>}
       <input
+        id={inputId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

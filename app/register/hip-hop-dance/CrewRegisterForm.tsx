@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import type { FestEvent } from "@/app/data/events";
 import Waves from "@/app/components/Waves";
+import { PAYMENT_REQUIRED } from "@/app/lib/config";
 
 type Member = {
   name: string;
@@ -29,6 +30,15 @@ const PRICE_FLAT = 3000;
 const MIN_MEMBERS = 8;
 const MAX_MEMBERS = 20;
 
+function generateCouponCode() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 export default function CrewRegisterForm({ event }: { event: FestEvent }) {
   const [step, setStep] = useState<
     "groupInfo" | "members" | "payment" | "done"
@@ -50,8 +60,14 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(
     null
   );
+  const [payeeName, setPayeeName] = useState("");
+  const [payeePhone, setPayeePhone] = useState("");
+  const [utrReference, setUtrReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const categoryId = useId();
+  const paymentScreenshotId = useId();
 
   function updateMember(
     index: number,
@@ -104,7 +120,7 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
   }
 
   async function handleSubmit() {
-    if (!paymentScreenshot) {
+    if (PAYMENT_REQUIRED && !paymentScreenshot) {
       setError("Please upload your payment screenshot.");
       return;
     }
@@ -126,18 +142,24 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
           props_used: propsUsed,
           props_details: propsUsed ? propsDetails : null,
           amount_paid: PRICE_FLAT,
+          payment_pending: !paymentScreenshot,
+          payee_name: payeeName,
+          payee_phone: payeePhone,
+          utr_reference: utrReference,
         })
         .select()
         .single();
 
       if (regError || !registration) throw regError;
 
-      const paymentPath = `${registration.id}/payment-screenshot-${paymentScreenshot.name}`;
-      await uploadFile(paymentScreenshot, paymentPath);
-      await supabase
-        .from("crew_registrations")
-        .update({ payment_screenshot_url: paymentPath })
-        .eq("id", registration.id);
+      if (paymentScreenshot) {
+        const paymentPath = `${registration.id}/payment-screenshot-${paymentScreenshot.name}`;
+        await uploadFile(paymentScreenshot, paymentPath);
+        await supabase
+          .from("crew_registrations")
+          .update({ payment_screenshot_url: paymentPath })
+          .eq("id", registration.id);
+      }
 
       for (let i = 0; i < members.length; i++) {
         const m = members[i];
@@ -162,6 +184,29 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
         if (memberError) throw memberError;
       }
 
+      const newCouponCode = generateCouponCode();
+      await supabase
+        .from("crew_registrations")
+        .update({ coupon_code: newCouponCode })
+        .eq("id", registration.id);
+      setCouponCode(newCouponCode);
+
+      try {
+        await fetch("/api/send-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            toEmail: members[0].email,
+            registrantName: members[0].name,
+            eventName: event.title,
+            eventDate: "September 25, 2026",
+            couponCode: newCouponCode,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Failed to send confirmation email:", emailErr);
+      }
+
       setStep("done");
     } catch (err) {
       console.error(err);
@@ -181,6 +226,16 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
           <p className="text-text-muted">
             {event.name} — {members.length} members
           </p>
+          {couponCode && (
+            <div className="mt-6 inline-block rounded-xl border border-thermal-accent/40 bg-thermal-accent/10 px-6 py-4">
+              <p className="text-text-muted text-xs uppercase tracking-wide mb-1">
+                Your Coupon Code
+              </p>
+              <p className="text-thermal-accent text-2xl font-mono font-bold tracking-widest">
+                {couponCode}
+              </p>
+            </div>
+          )}
         </div>
       </main>
     );
@@ -221,10 +276,11 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
               <Input label="Crew Name" value={crewName} onChange={setCrewName} />
 
               <div>
-                <label className="block text-text-muted text-sm mb-1">
+                <label htmlFor={categoryId} className="block text-text-muted text-sm mb-1">
                   Category
                 </label>
                 <select
+                  id={categoryId}
                   value={category}
                   onChange={(e) =>
                     setCategory(e.target.value as "open" | "college")
@@ -298,10 +354,10 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
                 onChange={setPerformanceDuration}
               />
 
-              <div>
-                <label className="block text-text-muted text-sm mb-2">
+              <fieldset>
+                <legend className="block text-text-muted text-sm mb-2">
                   Props used in performance?
-                </label>
+                </legend>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 text-text-muted text-sm">
                     <input
@@ -322,7 +378,7 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
                     No
                   </label>
                 </div>
-              </div>
+              </fieldset>
 
               {propsUsed && (
                 <Input
@@ -367,46 +423,78 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
 
         {step === "payment" && (
           <>
-            <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6">
-              <p className="text-text-muted text-sm uppercase tracking-wide mb-1">
-                Total Amount
-              </p>
-              <p className="text-text-primary text-3xl font-semibold">
-                ₹{PRICE_FLAT}
-              </p>
-              <p className="text-text-muted text-sm mt-1">Flat fee per crew</p>
-            </div>
+            {PAYMENT_REQUIRED ? (
+              <>
+                <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6">
+                  <p className="text-text-muted text-sm uppercase tracking-wide mb-1">
+                    Total Amount
+                  </p>
+                  <p className="text-text-primary text-3xl font-semibold">
+                    ₹{PRICE_FLAT}
+                  </p>
+                  <p className="text-text-muted text-sm mt-1">Flat fee per crew</p>
+                </div>
 
-            <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6 flex flex-col items-center">
-              <p className="text-text-muted text-sm mb-4">Scan to pay</p>
-              <div className="w-48 h-48 bg-white/10 border border-dashed border-white/20 rounded-lg flex items-center justify-center text-text-muted text-sm">
-                QR Placeholder
+                <div className="rounded-2xl border border-white/10 bg-bg-surface p-4 mb-6 flex flex-col items-center">
+                  <p className="text-text-muted text-sm mb-4">Scan to pay</p>
+                  <img
+                    src="/payment-qr.png"
+                    alt="Payment QR code"
+                    className="w-72 sm:w-80 h-auto rounded-lg object-contain"
+                  />
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  <Input label="Payee Name" value={payeeName} onChange={setPayeeName} />
+                  <Input
+                    label="Payee Mobile Number"
+                    type="tel"
+                    value={payeePhone}
+                    onChange={setPayeePhone}
+                  />
+                  <Input
+                    label="UTR / Transaction Reference Number"
+                    value={utrReference}
+                    onChange={setUtrReference}
+                    hint="Found in your UPI app's payment confirmation or transaction history."
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <label htmlFor={paymentScreenshotId} className="block text-text-muted text-sm mb-1">
+                    Payment Screenshot
+                  </label>
+                  <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
+                    <span className="text-text-muted text-sm truncate">
+                      {paymentScreenshot
+                        ? paymentScreenshot.name
+                        : "Click to upload screenshot"}
+                    </span>
+                    <span className="text-thermal-accent text-sm flex-shrink-0 ml-3">
+                      {paymentScreenshot ? "Change" : "Upload"}
+                    </span>
+                    <input
+                      id={paymentScreenshotId}
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={(e) =>
+                        setPaymentScreenshot(e.target.files?.[0] || null)
+                      }
+                      className="hidden cursor-target"
+                    />
+                  </label>
+                </div>
+              </>
+            ) : (
+              <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6">
+                <h2 className="text-text-primary text-xl font-semibold mb-2">
+                  Payment link coming soon
+                </h2>
+                <p className="text-text-muted text-sm">
+                  We&apos;ll send you a payment link via email and WhatsApp next week to complete your registration. No action needed from you right now.
+                </p>
               </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-text-muted text-sm mb-1">
-                Payment Screenshot
-              </label>
-              <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
-                <span className="text-text-muted text-sm truncate">
-                  {paymentScreenshot
-                    ? paymentScreenshot.name
-                    : "Click to upload screenshot"}
-                </span>
-                <span className="text-thermal-accent text-sm flex-shrink-0 ml-3">
-                  {paymentScreenshot ? "Change" : "Upload"}
-                </span>
-                <input
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={(e) =>
-                    setPaymentScreenshot(e.target.files?.[0] || null)
-                  }
-                  className="hidden cursor-target"
-                />
-              </label>
-            </div>
+            )}
 
             {error && <p className="text-thermal-accent text-sm mb-4">{error}</p>}
 
@@ -419,7 +507,14 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={
+                  submitting ||
+                  (PAYMENT_REQUIRED &&
+                    (!paymentScreenshot ||
+                      !payeeName ||
+                      !payeePhone ||
+                      !utrReference))
+                }
                 className="flex-1 px-8 py-3 rounded-full bg-thermal-accent text-bg-base font-semibold hover:opacity-90 transition-opacity disabled:bg-thermal-accent/60 disabled:text-bg-base/70"
               >
                 {submitting ? "Submitting..." : "Submit Registration"}
@@ -461,6 +556,9 @@ function MemberCard({
     member.age &&
     member.institution &&
     member.idProof;
+
+  const institutionId = useId();
+  const idProofId = useId();
 
   return (
     <div className="rounded-xl border border-white/10 bg-bg-surface overflow-hidden">
@@ -509,7 +607,7 @@ function MemberCard({
 
 <div>
   <div className="flex items-center justify-between mb-1">
-    <label className="block text-text-muted text-sm">Institution</label>
+    <label htmlFor={institutionId} className="block text-text-muted text-sm">Institution</label>
     {!isLeader && (
       <label className="flex items-center gap-2 text-text-muted text-xs">
         <input
@@ -526,6 +624,7 @@ function MemberCard({
     Graduated or no current institution? Enter &quot;N/A&quot;.
   </p>
   <input
+    id={institutionId}
     type="text"
     value={member.institution}
     onChange={(e) => onChange("institution", e.target.value)}
@@ -535,7 +634,7 @@ function MemberCard({
 </div>
 
           <div>
-            <label className="block text-text-muted text-sm mb-1">
+            <label htmlFor={idProofId} className="block text-text-muted text-sm mb-1">
               Identity Proof (PDF or PNG)
             </label>
             <label className="flex items-center justify-between w-full rounded-lg bg-bg-base border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
@@ -546,6 +645,7 @@ function MemberCard({
                 {member.idProof ? "Change" : "Upload"}
               </span>
               <input
+                id={idProofId}
                 type="file"
                 accept="application/pdf,image/png"
                 onChange={(e) =>
@@ -576,17 +676,22 @@ function Input({
   onChange,
   type = "text",
   disabled,
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   disabled?: boolean;
+  hint?: string;
 }) {
+  const inputId = useId();
   return (
     <div>
-      <label className="block text-text-muted text-sm mb-1">{label}</label>
+      <label htmlFor={inputId} className="block text-text-muted text-sm mb-1">{label}</label>
+      {hint && <p className="text-text-muted text-xs mb-1">{hint}</p>}
       <input
+        id={inputId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

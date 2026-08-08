@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 export default function PhoneInput({
   label = "Phone Number",
   value,
@@ -11,10 +13,12 @@ export default function PhoneInput({
   onChange: (v: string) => void;
   required?: boolean;
 }) {
+  const inputId = useId();
   return (
     <div>
-      <label className="block text-text-muted text-sm mb-1">{label}</label>
+      <label htmlFor={inputId} className="block text-text-muted text-sm mb-1">{label}</label>
       <input
+        id={inputId}
         type="tel"
         inputMode="numeric"
         pattern="[0-9]{10}"

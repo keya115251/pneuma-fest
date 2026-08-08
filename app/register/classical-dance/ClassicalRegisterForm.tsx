@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import type { FestEvent } from "@/app/data/events";
 import Waves from "@/app/components/Waves";
@@ -23,6 +23,7 @@ export default function ClassicalRegisterForm({
     teamMembers: "",
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
+  const teamMembersId = useId();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -120,10 +121,11 @@ export default function ClassicalRegisterForm({
                 required
               />
               <div>
-                <label className="block text-text-muted text-sm mb-1">
+                <label htmlFor={teamMembersId} className="block text-text-muted text-sm mb-1">
                   Team Members (names, comma separated)
                 </label>
                 <textarea
+                  id={teamMembersId}
                   value={form.teamMembers}
                   onChange={(e) =>
                     setForm({ ...form, teamMembers: e.target.value })
@@ -168,10 +170,12 @@ function Input({
   type?: string;
   required?: boolean;
 }) {
+  const inputId = useId();
   return (
     <div>
-      <label className="block text-text-muted text-sm mb-1">{label}</label>
+      <label htmlFor={inputId} className="block text-text-muted text-sm mb-1">{label}</label>
       <input
+        id={inputId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

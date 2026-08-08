@@ -12,7 +12,7 @@ const contacts = [
 export default function ContactPage() {
   return (
     <main className="relative min-h-screen bg-bg-base px-6 pt-32 pb-20 overflow-hidden">
-  <div className="absolute inset-0 opacity-20">
+  <div className="absolute inset-0 opacity-20 pointer-events-none">
       <LineWaves
         speed={0.3}
         innerLineCount={32}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import Waves from "@/app/components/Waves";
 
@@ -26,6 +26,15 @@ const emptyParticipant = (): Participant => ({
 
 const PRICE_PER_HEAD = 400;
 
+function generateCouponCode() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 export default function Round2Form() {
   const [stage, setStage] = useState<
     "lookup" | "members" | "payment" | "done"
@@ -45,8 +54,14 @@ export default function Round2Form() {
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(
     null
   );
+  const [payeeName, setPayeeName] = useState("");
+  const [payeePhone, setPayeePhone] = useState("");
+  const [utrReference, setUtrReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const techRiderId = useId();
+  const paymentScreenshotId = useId();
 
   async function handleLookup() {
     setLookingUp(true);
@@ -150,6 +165,9 @@ export default function Round2Form() {
           round2_amount_paid: total,
           round2_payment_screenshot_url: paymentPath,
           round2_completed_at: new Date().toISOString(),
+          round2_payee_name: payeeName,
+          round2_payee_phone: payeePhone,
+          round2_utr_reference: utrReference,
         })
         .eq("id", registration.id);
 
@@ -176,6 +194,29 @@ export default function Round2Form() {
         if (participantError) throw participantError;
       }
 
+      const newCouponCode = generateCouponCode();
+      await supabase
+        .from("band_registrations")
+        .update({ coupon_code: newCouponCode })
+        .eq("id", registration.id);
+      setCouponCode(newCouponCode);
+
+      try {
+        await fetch("/api/send-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            toEmail: registration.poc_email,
+            registrantName: registration.poc_name,
+            eventName: "Veni, Vidi, Vici.",
+            eventDate: "September 26, 2026",
+            couponCode: newCouponCode,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Failed to send confirmation email:", emailErr);
+      }
+
       setStage("done");
     } catch (err: any) {
       console.error("Round 2 submission error:", err?.message || err);
@@ -195,6 +236,16 @@ export default function Round2Form() {
           <p className="text-text-muted">
             {bandName} — see you at Veni, Vidi, Vici.
           </p>
+          {couponCode && (
+            <div className="mt-6 inline-block rounded-xl border border-thermal-accent/40 bg-thermal-accent/10 px-6 py-4">
+              <p className="text-text-muted text-xs uppercase tracking-wide mb-1">
+                Your Coupon Code
+              </p>
+              <p className="text-thermal-accent text-2xl font-mono font-bold tracking-widest">
+                {couponCode}
+              </p>
+            </div>
+          )}
         </div>
       </main>
     );
@@ -271,7 +322,7 @@ export default function Round2Form() {
             </div>
 
             <div className="mt-8">
-              <label className="block text-text-muted text-sm mb-1">
+              <label htmlFor={techRiderId} className="block text-text-muted text-sm mb-1">
                 Tech Rider (PDF or PNG)
               </label>
               <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
@@ -282,6 +333,7 @@ export default function Round2Form() {
                   {techRider ? "Change" : "Upload"}
                 </span>
                 <input
+                  id={techRiderId}
                   type="file"
                   accept="application/pdf,image/png"
                   onChange={(e) => setTechRider(e.target.files?.[0] || null)}
@@ -314,15 +366,33 @@ export default function Round2Form() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 mb-6 flex flex-col items-center">
+            <div className="rounded-2xl border border-white/10 bg-bg-surface p-4 mb-6 flex flex-col items-center">
               <p className="text-text-muted text-sm mb-4">Scan to pay</p>
-              <div className="w-48 h-48 bg-white/10 border border-dashed border-white/20 rounded-lg flex items-center justify-center text-text-muted text-sm">
-                QR Placeholder
-              </div>
+              <img
+                src="/payment-qr.png"
+                alt="Payment QR code"
+                className="w-72 sm:w-80 h-auto rounded-lg object-contain"
+              />
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <Input label="Payee Name" value={payeeName} onChange={setPayeeName} />
+              <Input
+                label="Payee Mobile Number"
+                type="tel"
+                value={payeePhone}
+                onChange={setPayeePhone}
+              />
+              <Input
+                label="UTR / Transaction Reference Number"
+                value={utrReference}
+                onChange={setUtrReference}
+                hint="Found in your UPI app's payment confirmation or transaction history."
+              />
             </div>
 
             <div className="mb-6">
-              <label className="block text-text-muted text-sm mb-1">
+              <label htmlFor={paymentScreenshotId} className="block text-text-muted text-sm mb-1">
                 Payment Screenshot
               </label>
               <label className="flex items-center justify-between w-full rounded-lg bg-bg-surface border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
@@ -335,6 +405,7 @@ export default function Round2Form() {
                   {paymentScreenshot ? "Change" : "Upload"}
                 </span>
                 <input
+                  id={paymentScreenshotId}
                   type="file"
                   accept="image/*,.pdf"
                   onChange={(e) =>
@@ -356,7 +427,13 @@ export default function Round2Form() {
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={
+                  submitting ||
+                  !paymentScreenshot ||
+                  !payeeName ||
+                  !payeePhone ||
+                  !utrReference
+                }
                 className="flex-1 px-8 py-3 rounded-full bg-thermal-accent text-bg-base font-semibold hover:opacity-90 transition-opacity disabled:bg-thermal-accent/60 disabled:text-bg-base/70"
               >
                 {submitting ? "Submitting..." : "Submit"}
@@ -394,6 +471,9 @@ function ParticipantCard({
     participant.institution &&
     participant.age &&
     participant.idProof;
+
+  const institutionId = useId();
+  const idProofId = useId();
 
   return (
     <div className="rounded-xl border border-white/10 bg-bg-surface overflow-hidden">
@@ -436,7 +516,7 @@ function ParticipantCard({
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-text-muted text-sm">
+              <label htmlFor={institutionId} className="block text-text-muted text-sm">
                 Institution
               </label>
               {!isPrimary && (
@@ -454,6 +534,7 @@ function ParticipantCard({
               Graduated or no current institution? Enter &quot;N/A&quot;.
             </p>
             <input
+              id={institutionId}
               type="text"
               value={participant.institution}
               onChange={(e) => onChange("institution", e.target.value)}
@@ -470,7 +551,7 @@ function ParticipantCard({
           />
 
           <div>
-            <label className="block text-text-muted text-sm mb-1">
+            <label htmlFor={idProofId} className="block text-text-muted text-sm mb-1">
               Identity Proof (PDF or PNG)
             </label>
             <label className="flex items-center justify-between w-full rounded-lg bg-bg-base border border-dashed border-white/20 px-4 py-3 cursor-pointer hover:border-thermal-accent transition-colors">
@@ -483,6 +564,7 @@ function ParticipantCard({
                 {participant.idProof ? "Change" : "Upload"}
               </span>
               <input
+                id={idProofId}
                 type="file"
                 accept="application/pdf,image/png"
                 onChange={(e) =>
@@ -503,16 +585,21 @@ function Input({
   value,
   onChange,
   type = "text",
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
+  hint?: string;
 }) {
+  const inputId = useId();
   return (
     <div>
-      <label className="block text-text-muted text-sm mb-1">{label}</label>
+      <label htmlFor={inputId} className="block text-text-muted text-sm mb-1">{label}</label>
+      {hint && <p className="text-text-muted text-xs mb-1">{hint}</p>}
       <input
+        id={inputId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
