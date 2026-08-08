@@ -14,6 +14,8 @@ export async function POST(req: NextRequest) {
     const {
       toEmail,
       registrantName,
+      registrantEmail,
+      registrantPhone,
       eventName,
       eventDate,
       couponCode,
@@ -32,6 +34,8 @@ export async function POST(req: NextRequest) {
       subject: `You're registered for ${eventName} — Dyuthi`,
       html: buildEmailHtml({
         registrantName,
+        registrantEmail,
+        registrantPhone,
         eventName,
         eventDate,
         couponCode,
@@ -52,11 +56,15 @@ export async function POST(req: NextRequest) {
 
 function buildEmailHtml({
   registrantName,
+  registrantEmail,
+  registrantPhone,
   eventName,
   eventDate,
   couponCode,
 }: {
   registrantName: string;
+  registrantEmail?: string;
+  registrantPhone?: string;
   eventName: string;
   eventDate?: string;
   couponCode?: string;
@@ -78,7 +86,19 @@ function buildEmailHtml({
         }
 
         <p style="margin: 0 0 4px; color: #999; font-size: 12px; text-transform: uppercase;">Registered by</p>
-        <p style="margin: 0; font-size: 16px;">${registrantName}</p>
+        <p style="margin: 0 0 16px; font-size: 16px;">${registrantName}</p>
+
+        ${
+          registrantEmail
+            ? `<p style="margin: 0 0 4px; color: #999; font-size: 12px; text-transform: uppercase;">Forward to</p>
+               <p style="margin: 0 0 4px; font-size: 15px;">${registrantEmail}</p>`
+            : ""
+        }
+        ${
+          registrantPhone
+            ? `<p style="margin: 0; font-size: 15px; color: #999;">${registrantPhone}</p>`
+            : ""
+        }
       </div>
 
       ${
@@ -86,7 +106,7 @@ function buildEmailHtml({
           ? `<div style="background: #1e1030; border: 1px solid #B497CF; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center;">
                <p style="margin: 0 0 8px; color: #B497CF; font-size: 12px; text-transform: uppercase;">Your Workshop Discount Code</p>
                <p style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 2px;">${couponCode}</p>
-               <p style="margin: 8px 0 0; color: #999; font-size: 13px;">25% off any workshop — details coming soon.</p>
+               <p style="margin: 8px 0 0; color: #999; font-size: 13px;">40% off any workshop, details coming soon.</p>
              </div>`
           : ""
       }

@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import PhoneInput from "@/app/components/PhoneInput";
 import Waves from "@/app/components/Waves"
-import { PAYMENT_REQUIRED } from "@/app/lib/config";
+import { PAYMENT_REQUIRED, TEAM_NOTIFICATION_EMAIL } from "@/app/lib/config";
 
 const AUDIENCE_PRICE = 100;
 
@@ -97,8 +97,10 @@ export default function AudienceRegisterForm() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            toEmail: email,
+            toEmail: TEAM_NOTIFICATION_EMAIL,
             registrantName: name,
+            registrantEmail: email,
+            registrantPhone: phone,
             eventName: "Pneuma Fest",
             eventDate: "September 25–26, 2026",
             couponCode: newCouponCode,

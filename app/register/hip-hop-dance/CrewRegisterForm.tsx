@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import type { FestEvent } from "@/app/data/events";
 import Waves from "@/app/components/Waves";
-import { PAYMENT_REQUIRED } from "@/app/lib/config";
+import { PAYMENT_REQUIRED, TEAM_NOTIFICATION_EMAIL } from "@/app/lib/config";
 
 type Member = {
   name: string;
@@ -196,8 +196,10 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            toEmail: members[0].email,
+            toEmail: TEAM_NOTIFICATION_EMAIL,
             registrantName: members[0].name,
+            registrantEmail: members[0].email,
+            registrantPhone: members[0].phone,
             eventName: event.title,
             eventDate: "September 25, 2026",
             couponCode: newCouponCode,

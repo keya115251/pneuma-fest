@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import type { FestEvent } from "@/app/data/events";
 import Waves from "@/app/components/Waves";
-import { PAYMENT_REQUIRED } from "@/app/lib/config";
+import { PAYMENT_REQUIRED, TEAM_NOTIFICATION_EMAIL } from "@/app/lib/config";
 
 type Participant = {
   name: string;
@@ -202,8 +202,10 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            toEmail: email,
+            toEmail: TEAM_NOTIFICATION_EMAIL,
             registrantName: participants[0].name,
+            registrantEmail: email,
+            registrantPhone: participants[0].contact,
             eventName: event.title,
             eventDate: "September 25, 2026",
             couponCode: newCouponCode,

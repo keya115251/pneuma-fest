@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import Waves from "@/app/components/Waves";
+import { TEAM_NOTIFICATION_EMAIL } from "@/app/lib/config";
 
 type Participant = {
   name: string;
@@ -206,8 +207,10 @@ export default function Round2Form() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            toEmail: registration.poc_email,
+            toEmail: TEAM_NOTIFICATION_EMAIL,
             registrantName: registration.poc_name,
+            registrantEmail: registration.poc_email,
+            registrantPhone: registration.poc_phone,
             eventName: "Veni, Vidi, Vici.",
             eventDate: "September 26, 2026",
             couponCode: newCouponCode,

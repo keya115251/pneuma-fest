@@ -150,7 +150,7 @@ export default function Home() {
   </div>
 
   {/* text content */}
-  <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20 pt-32">
+  <div className="relative z-10 min-h-screen flex items-center px-6 md:px-20 pt-32 pb-24 md:pb-0">
     <div className="max-w-2xl lg:pr-8">
       <Reveal>
         <h2 className="font-heading text-4xl md:text-5xl text-text-primary mb-8">
@@ -188,7 +188,7 @@ export default function Home() {
       <section
         id="sponsors"
         onClick={() => goTo("calendar")}
-        className="relative min-h-screen flex flex-col items-center justify-center cursor-pointer overflow-hidden"
+        className="relative min-h-screen flex flex-col items-center justify-center cursor-pointer overflow-hidden pb-24 md:pb-0"
       >
         <div className="pointer-events-none">
   <Waves
@@ -303,15 +303,21 @@ export default function Home() {
     </div>
 
     <Reveal delay={0.3}>
-      <div className="text-center mt-16">
-        <TransitionLink
-          href="/events"
-          className="cursor-target inline-block px-12 py-5 rounded-full bg-thermal-accent text-bg-base font-heading text-3xl hover:opacity-90 transition-opacity"
-        >
-          Explore Events
-        </TransitionLink>
-      </div>
-    </Reveal>
+  <div className="text-center mt-16 flex flex-col sm:flex-row gap-4 justify-center">
+    <TransitionLink
+      href="/events"
+      className="cursor-target inline-block px-12 py-5 rounded-full border border-thermal-accent text-thermal-accent font-heading text-3xl hover:bg-thermal-accent hover:text-bg-base transition-colors"
+    >
+      Register as Participant
+    </TransitionLink>
+    <TransitionLink
+      href="/register/audience"
+      className="cursor-target inline-block px-12 py-5 rounded-full border border-thermal-accent text-thermal-accent font-heading text-3xl hover:bg-thermal-accent hover:text-bg-base transition-colors"
+    >
+      Register as Audience
+    </TransitionLink>
+  </div>
+</Reveal>
   </div>
 </section>
     </main>
