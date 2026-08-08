@@ -35,6 +35,8 @@ const DANCE_FORMS = [
   "Odissi",
   "Manipuri",
   "Sattriya",
+  "Semi-classical",
+  "Fusion",
 ];
 
 const PRICE_PER_HEAD = 500;

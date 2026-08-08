@@ -8,15 +8,6 @@ import { PAYMENT_REQUIRED, TEAM_NOTIFICATION_EMAIL } from "@/app/lib/config";
 
 const AUDIENCE_PRICE = 100;
 
-function generateCouponCode() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let code = "";
-  for (let i = 0; i < 8; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
-}
-
 export default function AudienceRegisterForm() {
   const [step, setStep] = useState<"details" | "payment" | "done">("details");
 
@@ -32,7 +23,6 @@ export default function AudienceRegisterForm() {
   const [utrReference, setUtrReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [couponCode, setCouponCode] = useState("");
   const paymentScreenshotId = useId();
 
   const canProceedToPayment =
@@ -85,13 +75,6 @@ export default function AudienceRegisterForm() {
           .eq("id", registration.id);
       }
 
-      const newCouponCode = generateCouponCode();
-      await supabase
-        .from("audience_registrations")
-        .update({ coupon_code: newCouponCode })
-        .eq("id", registration.id);
-      setCouponCode(newCouponCode);
-
       try {
         await fetch("/api/send-confirmation", {
           method: "POST",
@@ -103,7 +86,6 @@ export default function AudienceRegisterForm() {
             registrantPhone: phone,
             eventName: "Pneuma Fest",
             eventDate: "September 25–26, 2026",
-            couponCode: newCouponCode,
           }),
         });
       } catch (emailErr) {
@@ -127,16 +109,6 @@ export default function AudienceRegisterForm() {
             You&apos;re registered!
           </h1>
           <p className="text-text-muted">Audience pass — {name}</p>
-          {couponCode && (
-            <div className="mt-6 inline-block rounded-xl border border-thermal-accent/40 bg-thermal-accent/10 px-6 py-4">
-              <p className="text-text-muted text-xs uppercase tracking-wide mb-1">
-                Your Coupon Code
-              </p>
-              <p className="text-thermal-accent text-2xl font-mono font-bold tracking-widest">
-                {couponCode}
-              </p>
-            </div>
-          )}
         </div>
       </main>
     );

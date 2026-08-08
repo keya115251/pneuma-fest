@@ -36,10 +36,19 @@ test("Battle of the Bands Round 1 registration completes end to end", async ({
     path.join(__dirname, "fixtures", "test-payment.jpg")
   );
 
+  await page.getByLabel("Payee Name").fill("Playwright Payer");
+  await page.getByLabel("Payee Mobile Number").fill("9999999999");
+  await page.getByLabel(/UTR/i).fill("UTR123456789TEST");
+
   await page.getByRole("button", { name: "Submit Registration" }).click();
 
   await expect(page.getByText("You're registered!")).toBeVisible({
     timeout: 15000,
   });
   await expect(page.getByText("Playwright Test Band")).toBeVisible();
+
+  // Round 1 should NOT generate or show a workshop coupon code - that
+  // only happens at Round 2. Guard against a regression where coupon
+  // logic accidentally ends up back on Round 1.
+  await expect(page.getByText(/coupon/i)).not.toBeVisible();
 });

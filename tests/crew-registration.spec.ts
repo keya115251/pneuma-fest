@@ -21,12 +21,12 @@ test("3T's (Hip-Hop Crew) registration completes end to end", async ({
   // to keep this test manageable.
   await fillMember(page, 0, "Crew Leader", TEST_EMAIL_BASE, true, false);
 
-  for (let i = 1; i < 8; i++) {
+  for (let i = 1; i < 5; i++) {
     await page.getByRole("button", { name: "+ Add Member" }).click();
     await fillMember(page, i, `Member ${i + 1}`, TEST_EMAIL_BASE, false, true);
   }
 
-  await expect(page.getByText("8 / 20 members")).toBeVisible();
+  await expect(page.getByText("5 / 25 members")).toBeVisible();
 
   await page.getByLabel("Performance Duration").fill("5 minutes");
   await page.getByLabel("No").check(); // props used = No
@@ -36,19 +36,24 @@ test("3T's (Hip-Hop Crew) registration completes end to end", async ({
 
   await page.getByRole("button", { name: "Continue to Payment" }).click();
 
-  await expect(page.getByText("₹3000")).toBeVisible();
+  await expect(page.getByText("₹3115")).toBeVisible();
 
   await page.setInputFiles(
     'input[type="file"]',
     path.join(__dirname, "fixtures", "test-payment.jpg")
   );
 
+  await page.getByLabel("Payee Name").fill("Playwright Payer");
+  await page.getByLabel("Payee Mobile Number").fill("9999999999");
+  await page.getByLabel(/UTR/i).fill("UTR123456789TEST");
+
   await page.getByRole("button", { name: "Submit Registration" }).click();
 
   await expect(page.getByText("You're registered!")).toBeVisible({
     timeout: 15000,
   });
-  await expect(page.getByText("8 members")).toBeVisible();
+  await expect(page.getByText("5 members")).toBeVisible();
+  await expect(page.getByText(/coupon/i)).toBeVisible();
 });
 
 async function fillMember(

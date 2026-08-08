@@ -26,9 +26,9 @@ const emptyMember = (): Member => ({
   idProof: null,
 });
 
-const PRICE_FLAT = 3000;
-const MIN_MEMBERS = 8;
-const MAX_MEMBERS = 20;
+const PRICE_FLAT = 3115;
+const MIN_MEMBERS = 5;
+const MAX_MEMBERS = 25;
 
 function generateCouponCode() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

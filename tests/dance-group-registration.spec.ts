@@ -59,10 +59,15 @@ test("Aangikam group registration completes end to end", async ({ page }) => {
     path.join(__dirname, "fixtures", "test-payment.jpg")
   );
 
+  await page.getByLabel("Payee Name").fill("Playwright Payer");
+  await page.getByLabel("Payee Mobile Number").fill("9999999999");
+  await page.getByLabel(/UTR/i).fill("UTR123456789TEST");
+
   await page.getByRole("button", { name: "Submit Registration" }).click();
 
   await expect(page.getByText("You're registered!")).toBeVisible({
     timeout: 15000,
   });
   await expect(page.getByText("Group of 2")).toBeVisible();
+  await expect(page.getByText(/coupon/i)).toBeVisible();
 });

@@ -109,4 +109,9 @@ test.skip("Battle of the Bands Round 2 registration completes end to end", async
   await expect(page.getByText("Round 2 complete!")).toBeVisible({
     timeout: 15000,
   });
+
+  // Round 2 SHOULD generate and show a workshop coupon code - confirm
+  // it's actually displayed on the success screen, not just saved
+  // silently to the database.
+  await expect(page.getByText(/coupon/i)).toBeVisible();
 });
