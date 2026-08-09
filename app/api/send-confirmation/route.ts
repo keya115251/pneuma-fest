@@ -108,6 +108,8 @@ function buildEmailHtml({
                <p style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 2px;">${couponCode}</p>
                <p style="margin: 8px 0 0; color: #999; font-size: 13px;">40% off any workshop, details coming soon.</p>
              </div>`
+          : eventName === "Veni, Vidi, Vici."
+          ? `<p style="color: #999; font-size: 13px; margin-bottom: 20px;">Round 1 results will be announced on our Instagram page by September 10, 2026.</p>`
           : ""
       }
 

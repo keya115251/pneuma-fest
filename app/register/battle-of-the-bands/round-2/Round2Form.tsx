@@ -212,7 +212,7 @@ export default function Round2Form() {
             registrantEmail: registration.poc_email,
             registrantPhone: registration.poc_phone,
             eventName: "Veni, Vidi, Vici.",
-            eventDate: "September 26, 2026",
+            eventDate: "September 19, 2026",
             couponCode: newCouponCode,
           }),
         });

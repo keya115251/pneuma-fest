@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { supabase } from "@/app/lib/supabase/client";
 import Waves from "@/app/components/Waves";
-import { PAYMENT_REQUIRED } from "@/app/lib/config";
+import { PAYMENT_REQUIRED, TEAM_NOTIFICATION_EMAIL } from "@/app/lib/config";
 
 const ROUND1_FEE = 100;
 
@@ -107,6 +107,23 @@ const canProceedToPayment =
           .from("band_registrations")
           .update({ payment_screenshot_url: paymentPath })
           .eq("id", registration.id);
+      }
+
+      try {
+        await fetch("/api/send-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            toEmail: TEAM_NOTIFICATION_EMAIL,
+            registrantName: pocName,
+            registrantEmail: pocEmail,
+            registrantPhone: pocPhone,
+            eventName: "Veni, Vidi, Vici.",
+            eventDate: "September 19, 2026",
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Failed to send confirmation email:", emailErr);
       }
 
       setStep("done");

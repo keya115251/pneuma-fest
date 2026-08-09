@@ -201,7 +201,7 @@ export default function CrewRegisterForm({ event }: { event: FestEvent }) {
             registrantEmail: members[0].email,
             registrantPhone: members[0].phone,
             eventName: event.title,
-            eventDate: "September 25, 2026",
+            eventDate: "September 18, 2026",
             couponCode: newCouponCode,
           }),
         });

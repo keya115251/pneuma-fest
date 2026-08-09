@@ -85,7 +85,9 @@ export default function AudienceRegisterForm() {
             registrantEmail: email,
             registrantPhone: phone,
             eventName: "Pneuma Fest",
-            eventDate: "September 25–26, 2026",
+            // TODO: confirm whether an audience pass covers one day or both days —
+            // if it's day-specific, this should reflect the registrant's actual day, not a range.
+            eventDate: "September 18-19, 2026",
           }),
         });
       } catch (emailErr) {

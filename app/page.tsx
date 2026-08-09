@@ -15,7 +15,7 @@ import { SPONSORS_ENABLED } from "./lib/siteConfig";
 
 const calendar = [
   {
-    day: "Day 1",
+    day: "Day 1 — September 18",
     slots: [
       { time: "Morning", event: "Aangikam", host: "Chaitanya Laasya" },
       { time: "Evening", event: "3T's (Time to Tap)", host: "UDC" },
@@ -23,7 +23,7 @@ const calendar = [
     ],
   },
   {
-    day: "Day 2",
+    day: "Day 2 — September 19",
     slots: [
       { time: "Main Event", event: "Veni, Vidi, Vici.", host: "Chaitanya Geethi x Vaadya" },
       { time: "Parallel", event: "Workshop / Celebrity Session 1", host: "UDC", tba: true },

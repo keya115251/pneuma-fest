@@ -209,7 +209,7 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
             registrantEmail: email,
             registrantPhone: participants[0].contact,
             eventName: event.title,
-            eventDate: "September 25, 2026",
+            eventDate: "September 18, 2026",
             couponCode: newCouponCode,
           }),
         });
