@@ -160,7 +160,7 @@ export default function Home() {
 
       <Reveal delay={0.1}>
         <p className="text-text-muted text-lg leading-relaxed mb-6">
-          Dyuthi is a national-level cultural fest bringing together four disciplines: voice, instrument, and dance, all under one stage. It's a collaboration between four clubs at Chaitanya Bharathi Institute of Technology (CBIT), Hyderabad: Chaitanya Geethi and Vaadya (the vocal and instrumental music clubs), UDC (hip hop dance), and Laasya (classical dance). Dyuthi is built on a simple idea: every performance is its own kind of light, and this stage is where they all converge.
+          Dyuthi is a national-level cultural fest bringing together three disciplines: voice, instrument, and dance, all under one stage. It's a collaboration between four clubs at Chaitanya Bharathi Institute of Technology (CBIT), Hyderabad: Chaitanya Geethi and Vaadya (the vocal and instrumental music clubs), UDC (hip hop dance), and Laasya (classical dance). Dyuthi is built on a simple idea: every performance is its own kind of light, and this stage is where they all converge.
         </p>
       </Reveal>
 
