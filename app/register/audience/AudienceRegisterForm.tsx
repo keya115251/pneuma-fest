@@ -84,7 +84,7 @@ export default function AudienceRegisterForm() {
             registrantName: name,
             registrantEmail: email,
             registrantPhone: phone,
-            eventName: "Pneuma Fest",
+            eventName: "Dyuthi",
             // TODO: confirm whether an audience pass covers one day or both days —
             // if it's day-specific, this should reflect the registrant's actual day, not a range.
             eventDate: "September 18-19, 2026",

@@ -125,6 +125,22 @@ type BandRegistration = {
   band_participants: BandParticipant[];
 };
 
+type AudienceRegistration = {
+  id: string;
+  created_at: string;
+  name: string;
+  age: number | null;
+  institution: string;
+  phone: string;
+  email: string;
+  amount_paid: number;
+  payment_pending: boolean;
+  payee_name: string | null;
+  payee_phone: string | null;
+  utr_reference: string | null;
+  payment_screenshot_url: string | null;
+};
+
 // ---------- page ----------
 
 export default async function AdminDashboard() {
@@ -231,6 +247,8 @@ async function renderLaasyaDashboard(heading: string) {
           ))}
         </div>
       </div>
+
+      {await renderAudienceSection()}
     </DashboardShell>
   );
 }
@@ -329,6 +347,8 @@ async function renderUdcDashboard(heading: string) {
           ))}
         </div>
       </div>
+
+      {await renderAudienceSection()}
     </DashboardShell>
   );
 }
@@ -531,7 +551,82 @@ async function renderBandDashboard(heading: string) {
           })}
         </div>
       </div>
+
+      {await renderAudienceSection()}
     </DashboardShell>
+  );
+}
+
+// ---------- audience section (shown to every club login) ----------
+
+async function renderAudienceSection() {
+  const { data, error } = await supabaseAdmin
+    .from("audience_registrations")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  const registrations = (data ?? []) as AudienceRegistration[];
+
+  const urls = await buildSignedUrlMap(
+    registrations.map((r) => r.payment_screenshot_url)
+  );
+
+  return (
+    <div className="mt-16">
+      <h2 className="text-3xl font-bold text-text-primary mb-1">
+        Audience — Registrations
+      </h2>
+      <p className="text-text-muted mb-8">{registrations.length} total</p>
+
+      {error && (
+        <p className="text-thermal-accent mb-4">Error loading registrations.</p>
+      )}
+
+      <div className="rounded-2xl border border-white/10 overflow-x-auto">
+        <div className="min-w-350 divide-y divide-white/10">
+          <div
+            className="grid gap-2 bg-bg-surface text-text-muted text-xs uppercase tracking-wide px-4 py-3"
+            style={{ gridTemplateColumns: GRID_11 }}
+          >
+            {AUDIENCE_COLUMNS.map((c) => (
+              <span key={c}>{c}</span>
+            ))}
+          </div>
+
+          {registrations.map((r) => (
+            <div
+              key={r.id}
+              className="grid gap-2 items-center px-4 py-3 text-text-primary text-sm"
+              style={{ gridTemplateColumns: GRID_11 }}
+            >
+              <span className="max-w-40 wrap-break-word" title={r.name}>
+                {r.name}
+              </span>
+              <span>{r.age ?? "—"}</span>
+              <span className="max-w-40 wrap-break-word" title={r.institution}>
+                {r.institution}
+              </span>
+              <span>{r.phone}</span>
+              <span className="max-w-40 wrap-break-word" title={r.email}>
+                {r.email}
+              </span>
+              <span>₹{r.amount_paid}</span>
+              <span>{formatBool(r.payment_pending)}</span>
+              <span className="max-w-40 wrap-break-word" title={r.payee_name ?? undefined}>
+                {r.payee_name ?? "—"}
+              </span>
+              <span>{r.payee_phone ?? "—"}</span>
+              <span className="max-w-40 wrap-break-word" title={r.utr_reference ?? undefined}>
+                {r.utr_reference ?? "—"}
+              </span>
+              <span>
+                <FileLink url={urls.get(r.payment_screenshot_url ?? "")} />
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -745,6 +840,7 @@ async function buildSignedUrlMap(
 // sync with LAASYA_COLUMNS/UDC_COLUMNS/BAND_COLUMNS below.
 const GRID_16 = `repeat(${SHOW_OCR_VERIFICATION ? 16 : 14}, minmax(100px, 1fr)) 32px`;
 const GRID_12 = `repeat(${SHOW_OCR_VERIFICATION ? 12 : 11}, minmax(110px, 1fr)) 32px`;
+const GRID_11 = `repeat(11, minmax(100px, 1fr))`;
 
 const OCR_SUMMARY_COLUMNS = SHOW_OCR_VERIFICATION ? ["Review", "Match"] : [];
 const OCR_BAND_SUMMARY_COLUMNS = SHOW_OCR_VERIFICATION ? ["Review"] : [];
@@ -785,6 +881,20 @@ const UDC_COLUMNS = [
   "Payee Phone",
   "Coupon",
   "",
+];
+
+const AUDIENCE_COLUMNS = [
+  "Name",
+  "Age",
+  "Institution",
+  "Phone",
+  "Email",
+  "Amount",
+  "Pending",
+  "Payee",
+  "Payee Phone",
+  "UTR",
+  "Screenshot",
 ];
 
 const BAND_COLUMNS = [
