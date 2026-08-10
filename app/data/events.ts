@@ -65,7 +65,7 @@ export const events: FestEvent[] = [
     slug: "hip-hop-dance",
     title: "3T's",
     name: "Hip Hop Dance",
-    hosts: "UDC",
+    hosts: "United Dance Crew",
     format: "single",
     categories: null,
     eligibility: "Open to all colleges and schools",

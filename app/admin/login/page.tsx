@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 const clubOptions = [
   { id: "geethi-vaadya", label: "Chaitanya Geethi x Vaadya" },
-  { id: "udc", label: "UDC" },
+  { id: "udc", label: "United Dance Crew" },
   { id: "laasya", label: "Laasya" },
 ];
 

@@ -19,7 +19,7 @@ const workshops = [
   {
     id: "workshop-2",
     title: "Workshop / Celebrity Session",
-    host: "UDC",
+    host: "United Dance Crew",
     day: "Day 2",
     image: "/workshops/udc.jpg",
   },

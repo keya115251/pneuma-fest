@@ -6,7 +6,7 @@ export const clubs = {
     passwordEnvKey: "GEETHI_VAADYA_PASSWORD",
   },
   udc: {
-    label: "UDC",
+    label: "United Dance Crew",
     eventName: "3T's",
     eventSlugs: ["hip-hop-dance"],
     passwordEnvKey: "UDC_PASSWORD",

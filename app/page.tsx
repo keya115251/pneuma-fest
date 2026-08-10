@@ -18,15 +18,15 @@ const calendar = [
     day: "Day 1 — September 18",
     slots: [
       { time: "Morning", event: "Aangikam", host: "Chaitanya Laasya" },
-      { time: "Evening", event: "3T's (Time to Tap)", host: "UDC" },
+      { time: "Evening", event: "3T's (Time to Tap)", host: "United Dance Crew" },
       { time: "Parallel", event: "Workshop / Celebrity Session", host: "Chaitanya Geethi x Vaadya", tba: true },
     ],
   },
   {
     day: "Day 2 — September 19",
     slots: [
-      { time: "Main Event", event: "Veni, Vidi, Vici.", host: "Chaitanya Geethi x Vaadya" },
-      { time: "Parallel", event: "Workshop / Celebrity Session 1", host: "UDC", tba: true },
+      { time: "All Day", event: "Veni, Vidi, Vici.", host: "Chaitanya Geethi x Vaadya" },
+      { time: "Parallel", event: "Workshop / Celebrity Session 1", host: "United Dance Crew", tba: true },
       { time: "Parallel", event: "Workshop / Celebrity Session 2", host: "Chaitanya Laasya", tba: true },
     ],
   },
@@ -160,7 +160,7 @@ export default function Home() {
 
       <Reveal delay={0.1}>
         <p className="text-text-muted text-lg leading-relaxed mb-6">
-          Dyuthi is a national-level cultural fest bringing together three disciplines: voice, instrument, and dance, all under one stage. It's a collaboration between four clubs at Chaitanya Bharathi Institute of Technology (CBIT), Hyderabad: Chaitanya Geethi and Vaadya (the vocal and instrumental music clubs), UDC (hip hop dance), and Laasya (classical dance). Dyuthi is built on a simple idea: every performance is its own kind of light, and this stage is where they all converge.
+          Dyuthi is a national-level cultural fest bringing together three disciplines: voice, instrument, and dance, all under one stage. It's a collaboration between four clubs at Chaitanya Bharathi Institute of Technology (CBIT), Hyderabad: Chaitanya Geethi and Vaadya (the vocal and instrumental music clubs), United Dance Crew (hip hop dance), and Laasya (classical dance). Dyuthi is built on a simple idea: every performance is its own kind of light, and this stage is where they all converge.
         </p>
       </Reveal>
 
