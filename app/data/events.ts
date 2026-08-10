@@ -11,6 +11,7 @@ export type FestEvent = {
   categories: EventCategory[] | null;
   eligibility: string;
   prize: string;
+  registrationFee?: string;
   rules: string;
   description: string;
   image: string;
@@ -45,6 +46,7 @@ export const events: FestEvent[] = [
   categories: null,
   eligibility: "Open to all colleges and schools",
   prize: "₹1,00,000",
+  registrationFee: "₹100 for Round 1 entry, ₹400 per head for Round 2 (if selected)",
   rules: "All rock-adjacent genres welcome (fusion, metal, prog, etc).",
   description: "",
   image: "/events/battle-of-the-bands.jpg",
@@ -70,6 +72,7 @@ export const events: FestEvent[] = [
     categories: null,
     eligibility: "Open to all colleges and schools",
     prize: "₹1,00,000",
+    registrationFee: "₹3,115 flat fee per crew",
     rules: "All Hip-hop and western dance forms.",
     description: "",
     image: "/events/hip-hop-dance.jpg",
@@ -92,6 +95,7 @@ export const events: FestEvent[] = [
     categories: null,
     eligibility: "Open to all colleges and schools",
     prize: "₹1,00,000",
+    registrationFee: "₹500 per head",
     rules: "",
     description: "",
     image: "/events/classical-dance.jpg",

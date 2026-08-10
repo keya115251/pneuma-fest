@@ -138,6 +138,13 @@ export default function AudienceRegisterForm() {
         <h1 className="font-heading text-4xl text-text-primary mb-2">
           Register — Audience
         </h1>
+
+        <div className="rounded-2xl border border-white/10 bg-bg-surface px-4 py-3 mb-6">
+          <p className="text-text-muted text-sm">
+            CBIT students enter free, just bring your college ID.
+          </p>
+        </div>
+
         <p className="text-text-muted mb-10">
           {step === "details" && "Your details"}
           {step === "payment" && "Payment"}

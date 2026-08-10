@@ -36,6 +36,9 @@ export default function EventDetails({ event }: { event: FestEvent }) {
         <div className="rounded-2xl border border-white/10 bg-bg-surface p-8 space-y-4">
           <Detail label="Eligibility" value={event.eligibility} />
           <Detail label="Prize Pool" value={event.prize} />
+          {event.registrationFee && (
+            <Detail label="Registration Fee" value={event.registrationFee} />
+          )}
 
           {event.bandSize && (
             <Detail
