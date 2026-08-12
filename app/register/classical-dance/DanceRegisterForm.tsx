@@ -59,7 +59,6 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
 
   const [city, setCity] = useState("");
   const [stateName, setStateName] = useState("");
-  const [email, setEmail] = useState("");
   const [ageGroup, setAgeGroup] = useState<"junior" | "senior">("junior");
   const [danceForm, setDanceForm] = useState(DANCE_FORMS[0]);
   const [performanceType, setPerformanceType] = useState<"solo" | "group">(
@@ -111,7 +110,7 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
     setOpenIndex(0);
   }
 
-  const canProceedToParticipants = city && stateName && email;
+  const canProceedToParticipants = city && stateName;
 
   const canProceedToPayment = participants.every(
     (p) =>
@@ -149,7 +148,7 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
           age_group: ageGroup,
           city,
           state: stateName,
-          email,
+          email: participants[0].email,
           participant_count: participants.length,
           amount_paid: total,
           payment_pending: !paymentScreenshot,
@@ -208,7 +207,7 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
           body: JSON.stringify({
             toEmail: TEAM_NOTIFICATION_EMAIL,
             registrantName: participants[0].name,
-            registrantEmail: email,
+            registrantEmail: participants[0].email,
             registrantPhone: participants[0].contact,
             eventName: event.title,
             eventDate: "September 18, 2026",
@@ -287,12 +286,6 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
             <div className="space-y-4 mb-8">
               <Input label="City" value={city} onChange={setCity} />
               <Input label="State" value={stateName} onChange={setStateName} />
-              <Input
-                label="Email"
-                type="email"
-                value={email}
-                onChange={setEmail}
-              />
 
               <fieldset>
                 <legend className="block text-text-muted text-sm mb-2">

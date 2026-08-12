@@ -95,7 +95,7 @@ export const events: FestEvent[] = [
     categories: null,
     eligibility: "Open to all colleges and schools",
     prize: "₹1,00,000",
-    registrationFee: "₹500 per head",
+    registrationFee: "₹850 solo, ₹500 per head (group)",
     rules: "",
     description: "",
     image: "/events/classical-dance.jpg",
