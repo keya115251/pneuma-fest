@@ -6,6 +6,7 @@ import { clubs, ClubId } from "@/app/lib/clubAuth";
 import { supabaseAdmin } from "@/app/lib/supabase/admin";
 import { SHOW_OCR_VERIFICATION } from "@/app/lib/config";
 import MarkSelectedButton from "./MarkSelectedButton";
+import LogoutButton from "./LogoutButton";
 
 const STORAGE_BUCKET = "registration-uploads";
 const SIGNED_URL_EXPIRY_SECONDS = 60 * 60;
@@ -700,9 +701,12 @@ function DashboardShell({
     <main className="min-h-screen bg-bg-base px-6 pt-32 pb-16">
       <div className="max-w-6xl mx-auto">
         {tabs}
-        <h1 className="text-3xl font-bold text-text-primary mb-1">
-          {heading} — Registrations
-        </h1>
+        <div className="flex items-start justify-between gap-4 mb-1">
+          <h1 className="text-3xl font-bold text-text-primary">
+            {heading} — Registrations
+          </h1>
+          <LogoutButton />
+        </div>
         <p className="text-text-muted mb-8">{count} total</p>
 
         {error && (
