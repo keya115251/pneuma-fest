@@ -39,7 +39,8 @@ const DANCE_FORMS = [
   "Fusion",
 ];
 
-const PRICE_PER_HEAD = 500;
+const SOLO_PRICE = 850;
+const GROUP_PRICE_PER_HEAD = 500;
 const MAX_GROUP_SIZE = 10;
 
 function generateCouponCode() {
@@ -112,14 +113,15 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
 
   const canProceedToParticipants = city && stateName && email;
 
-  const canProceedToPayment = participants.every((p) => {
-    if (performanceType === "solo") {
-      return p.name && p.institution && p.idProof;
-    }
-    return p.name && p.contact && p.email && p.age && p.institution && p.idProof;
-  });
+  const canProceedToPayment = participants.every(
+    (p) =>
+      p.name && p.contact && p.email && p.age && p.institution && p.idProof
+  );
 
-  const total = participants.length * PRICE_PER_HEAD;
+  const total =
+    performanceType === "solo"
+      ? SOLO_PRICE
+      : participants.length * GROUP_PRICE_PER_HEAD;
 
   async function uploadFile(file: File, path: string) {
     const { error: uploadError } = await supabase.storage
@@ -432,7 +434,9 @@ export default function DanceRegisterForm({ event }: { event: FestEvent }) {
                     ₹{total}
                   </p>
                   <p className="text-text-muted text-sm mt-1">
-                    {participants.length} × ₹{PRICE_PER_HEAD}
+                    {performanceType === "solo"
+                      ? `₹${SOLO_PRICE}`
+                      : `${participants.length} × ₹${GROUP_PRICE_PER_HEAD}`}
                   </p>
                 </div>
 
@@ -552,14 +556,13 @@ function ParticipantCard({
   onRemove: () => void;
   canRemove: boolean;
 }) {
-  const isFilled = isSolo
-    ? participant.name && participant.institution && participant.idProof
-    : participant.name &&
-      participant.contact &&
-      participant.email &&
-      participant.age &&
-      participant.institution &&
-      participant.idProof;
+  const isFilled =
+    participant.name &&
+    participant.contact &&
+    participant.email &&
+    participant.age &&
+    participant.institution &&
+    participant.idProof;
 
   const institutionId = useId();
   const idProofId = useId();
@@ -591,28 +594,24 @@ function ParticipantCard({
             onChange={(v) => onChange("name", v)}
           />
 
-          {!isSolo && (
-            <>
-              <Input
-                label="Contact"
-                type="tel"
-                value={participant.contact}
-                onChange={(v) => onChange("contact", v)}
-              />
-              <Input
-                label="Email"
-                type="email"
-                value={participant.email}
-                onChange={(v) => onChange("email", v)}
-              />
-              <Input
-                label="Age"
-                type="number"
-                value={participant.age}
-                onChange={(v) => onChange("age", v)}
-              />
-            </>
-          )}
+          <Input
+            label="Contact"
+            type="tel"
+            value={participant.contact}
+            onChange={(v) => onChange("contact", v)}
+          />
+          <Input
+            label="Email"
+            type="email"
+            value={participant.email}
+            onChange={(v) => onChange("email", v)}
+          />
+          <Input
+            label="Age"
+            type="number"
+            value={participant.age}
+            onChange={(v) => onChange("age", v)}
+          />
 
           <div>
             <div className="flex items-center justify-between mb-1">

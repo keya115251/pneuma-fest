@@ -255,7 +255,7 @@ async function renderLaasyaDashboard(heading: string, tabs?: ReactNode) {
                 <span className="capitalize">{r.age_group}</span>
                 <span>{r.city}</span>
                 <span>{r.state}</span>
-                <span className="max-w-40" title={r.email}>
+                <span className="max-w-40 wrap-break-word" title={r.email}>
                   {r.email}
                 </span>
                 <span>{r.participant_count}</span>
@@ -274,10 +274,16 @@ async function renderLaasyaDashboard(heading: string, tabs?: ReactNode) {
                 <span>
                   <FileLink url={urls.get(r.payment_screenshot_url ?? "")} />
                 </span>
-                <span className="max-w-40" title={r.utr_reference ?? undefined}>
+                <span
+                  className="max-w-40 wrap-break-word"
+                  title={r.utr_reference ?? undefined}
+                >
                   {r.utr_reference ?? "—"}
                 </span>
-                <span className="max-w-40" title={r.payee_name ?? undefined}>
+                <span
+                  className="max-w-40 wrap-break-word"
+                  title={r.payee_name ?? undefined}
+                >
                   {r.payee_name ?? "—"}
                 </span>
                 <span>{r.payee_phone ?? "—"}</span>
@@ -346,18 +352,21 @@ async function renderUdcDashboard(heading: string, tabs?: ReactNode) {
                 }`}
                 style={{ gridTemplateColumns: GRID_16 }}
               >
-                <span className="max-w-40" title={r.crew_name}>
+                <span className="max-w-40 wrap-break-word" title={r.crew_name}>
                   {r.crew_name}
                 </span>
                 <span className="capitalize">{r.category}</span>
-                <span className="max-w-40" title={r.institution ?? undefined}>
+                <span
+                  className="max-w-40 wrap-break-word"
+                  title={r.institution ?? undefined}
+                >
                   {r.institution ?? "—"}
                 </span>
                 <span>{r.city}</span>
                 <span>{r.state}</span>
                 <span>{r.member_count}</span>
                 <span
-                  className="max-w-40"
+                  className="max-w-40 wrap-break-word"
                   title={r.performance_duration ?? undefined}
                 >
                   {r.performance_duration ?? "—"}
@@ -377,10 +386,16 @@ async function renderUdcDashboard(heading: string, tabs?: ReactNode) {
                 <span>
                   <FileLink url={urls.get(r.payment_screenshot_url ?? "")} />
                 </span>
-                <span className="max-w-40" title={r.utr_reference ?? undefined}>
+                <span
+                  className="max-w-40 wrap-break-word"
+                  title={r.utr_reference ?? undefined}
+                >
                   {r.utr_reference ?? "—"}
                 </span>
-                <span className="max-w-40" title={r.payee_name ?? undefined}>
+                <span
+                  className="max-w-40 wrap-break-word"
+                  title={r.payee_name ?? undefined}
+                >
                   {r.payee_name ?? "—"}
                 </span>
                 <span>{r.payee_phone ?? "—"}</span>
@@ -456,17 +471,17 @@ async function renderBandDashboard(heading: string, tabs?: ReactNode) {
                   }`}
                   style={{ gridTemplateColumns: GRID_12 }}
                 >
-                  <span className="max-w-40" title={r.band_name}>
+                  <span className="max-w-40 wrap-break-word" title={r.band_name}>
                     {r.band_name}
                   </span>
                   <span>{r.participant_count}</span>
                   <span>{r.city}</span>
                   <span>{r.state}</span>
-                  <span className="max-w-40" title={r.poc_name}>
+                  <span className="max-w-40 wrap-break-word" title={r.poc_name}>
                     {r.poc_name}
                   </span>
                   <span>{r.poc_phone}</span>
-                  <span className="max-w-40" title={r.poc_email}>
+                  <span className="max-w-40 wrap-break-word" title={r.poc_email}>
                     {r.poc_email}
                   </span>
                   <span className="capitalize">{r.status}</span>
