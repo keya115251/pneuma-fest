@@ -7,6 +7,7 @@ const clubOptions = [
   { id: "geethi-vaadya", label: "Chaitanya Geethi x Vaadya" },
   { id: "udc", label: "United Dance Crew" },
   { id: "laasya", label: "Laasya" },
+  { id: "main", label: "Main Admin (All Registrations)" },
 ];
 
 export default function AdminLogin() {

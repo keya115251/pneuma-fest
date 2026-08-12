@@ -17,6 +17,12 @@ export const clubs = {
     eventSlugs: ["classical-dance"],
     passwordEnvKey: "LAASYA_PASSWORD",
   },
+  main: {
+    label: "Main Admin (All Registrations)",
+    eventName: "All Events",
+    eventSlugs: [],
+    passwordEnvKey: "MAIN_ADMIN_PASSWORD",
+  },
 } as const;
 
 export type ClubId = keyof typeof clubs;

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const clubId = cookieStore.get("admin_club")?.value as ClubId | undefined;
 
-  if (clubId !== "geethi-vaadya") {
+  if (clubId !== "geethi-vaadya" && clubId !== "main") {
     return NextResponse.json({ error: "Not authorized" }, { status: 403 });
   }
 

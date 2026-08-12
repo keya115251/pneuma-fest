@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { clubs, ClubId } from "@/app/lib/clubAuth";
 import { supabaseAdmin } from "@/app/lib/supabase/admin";
 import { SHOW_OCR_VERIFICATION } from "@/app/lib/config";
@@ -143,7 +144,20 @@ type AudienceRegistration = {
 
 // ---------- page ----------
 
-export default async function AdminDashboard() {
+type AdminView = "dance" | "crew" | "band" | "audience";
+
+const VIEW_TABS: { id: AdminView; label: string }[] = [
+  { id: "dance", label: "Aangikam (Dance)" },
+  { id: "crew", label: "3T's (Crew)" },
+  { id: "band", label: "Veni Vidi Vici (Band)" },
+  { id: "audience", label: "Audience" },
+];
+
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>;
+}) {
   const cookieStore = await cookies();
   const clubId = cookieStore.get("admin_club")?.value as ClubId | undefined;
 
@@ -151,16 +165,48 @@ export default async function AdminDashboard() {
     redirect("/admin/login");
   }
 
-  const clubConfig = clubs[clubId];
+  if (clubId === "laasya") return renderLaasyaDashboard(clubs.laasya.eventName);
+  if (clubId === "udc") return renderUdcDashboard(clubs.udc.eventName);
+  if (clubId === "geethi-vaadya")
+    return renderBandDashboard(clubs["geethi-vaadya"].eventName);
 
-  if (clubId === "laasya") return renderLaasyaDashboard(clubConfig.eventName);
-  if (clubId === "udc") return renderUdcDashboard(clubConfig.eventName);
-  return renderBandDashboard(clubConfig.eventName);
+  // main admin — pick which club's data to view via ?view=, one table at a time
+  const { view } = await searchParams;
+  const selected: AdminView =
+    view === "crew" || view === "band" || view === "audience" ? view : "dance";
+
+  const tabs = <AdminViewTabs current={selected} />;
+
+  if (selected === "crew") return renderUdcDashboard(clubs.udc.eventName, tabs);
+  if (selected === "band")
+    return renderBandDashboard(clubs["geethi-vaadya"].eventName, tabs);
+  if (selected === "audience") return renderAudienceDashboard(tabs);
+  return renderLaasyaDashboard(clubs.laasya.eventName, tabs);
+}
+
+function AdminViewTabs({ current }: { current: AdminView }) {
+  return (
+    <div className="flex flex-wrap gap-2 mb-8">
+      {VIEW_TABS.map((t) => (
+        <Link
+          key={t.id}
+          href={`/admin?view=${t.id}`}
+          className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+            current === t.id
+              ? "bg-thermal-mid-hot text-bg-base"
+              : "bg-bg-surface text-text-muted border border-white/10 hover:text-text-primary"
+          }`}
+        >
+          {t.label}
+        </Link>
+      ))}
+    </div>
+  );
 }
 
 // ---------- club dashboards ----------
 
-async function renderLaasyaDashboard(heading: string) {
+async function renderLaasyaDashboard(heading: string, tabs?: ReactNode) {
   const { data, error } = await supabaseAdmin
     .from("dance_registrations")
     .select("*, dance_participants(*)")
@@ -176,7 +222,12 @@ async function renderLaasyaDashboard(heading: string) {
   const urls = await buildSignedUrlMap(paths);
 
   return (
-    <DashboardShell heading={heading} count={registrations.length} error={!!error}>
+    <DashboardShell
+      heading={heading}
+      count={registrations.length}
+      error={!!error}
+      tabs={tabs}
+    >
       <div className="rounded-2xl border border-white/10 overflow-x-auto">
         <div className="min-w-[1600px] divide-y divide-white/10">
           <div
@@ -247,13 +298,11 @@ async function renderLaasyaDashboard(heading: string) {
           ))}
         </div>
       </div>
-
-      {await renderAudienceSection()}
     </DashboardShell>
   );
 }
 
-async function renderUdcDashboard(heading: string) {
+async function renderUdcDashboard(heading: string, tabs?: ReactNode) {
   const { data, error } = await supabaseAdmin
     .from("crew_registrations")
     .select("*, crew_members(*)")
@@ -269,7 +318,12 @@ async function renderUdcDashboard(heading: string) {
   const urls = await buildSignedUrlMap(paths);
 
   return (
-    <DashboardShell heading={heading} count={registrations.length} error={!!error}>
+    <DashboardShell
+      heading={heading}
+      count={registrations.length}
+      error={!!error}
+      tabs={tabs}
+    >
       <div className="rounded-2xl border border-white/10 overflow-x-auto">
         <div className="min-w-[1600px] divide-y divide-white/10">
           <div
@@ -347,13 +401,11 @@ async function renderUdcDashboard(heading: string) {
           ))}
         </div>
       </div>
-
-      {await renderAudienceSection()}
     </DashboardShell>
   );
 }
 
-async function renderBandDashboard(heading: string) {
+async function renderBandDashboard(heading: string, tabs?: ReactNode) {
   const { data, error } = await supabaseAdmin
     .from("band_registrations")
     .select("*, band_participants(*)")
@@ -369,7 +421,12 @@ async function renderBandDashboard(heading: string) {
   const urls = await buildSignedUrlMap(paths);
 
   return (
-    <DashboardShell heading={heading} count={registrations.length} error={!!error}>
+    <DashboardShell
+      heading={heading}
+      count={registrations.length}
+      error={!!error}
+      tabs={tabs}
+    >
       <div className="rounded-2xl border border-white/10 overflow-x-auto">
         <div className="min-w-325 divide-y divide-white/10">
           <div
@@ -551,15 +608,13 @@ async function renderBandDashboard(heading: string) {
           })}
         </div>
       </div>
-
-      {await renderAudienceSection()}
     </DashboardShell>
   );
 }
 
-// ---------- audience section (shown to every club login) ----------
+// ---------- audience dashboard (main admin only) ----------
 
-async function renderAudienceSection() {
+async function renderAudienceDashboard(tabs?: ReactNode) {
   const { data, error } = await supabaseAdmin
     .from("audience_registrations")
     .select("*")
@@ -572,16 +627,12 @@ async function renderAudienceSection() {
   );
 
   return (
-    <div className="mt-16">
-      <h2 className="text-3xl font-bold text-text-primary mb-1">
-        Audience — Registrations
-      </h2>
-      <p className="text-text-muted mb-8">{registrations.length} total</p>
-
-      {error && (
-        <p className="text-thermal-accent mb-4">Error loading registrations.</p>
-      )}
-
+    <DashboardShell
+      heading="Audience"
+      count={registrations.length}
+      error={!!error}
+      tabs={tabs}
+    >
       <div className="rounded-2xl border border-white/10 overflow-x-auto">
         <div className="min-w-350 divide-y divide-white/10">
           <div
@@ -626,7 +677,7 @@ async function renderAudienceSection() {
           ))}
         </div>
       </div>
-    </div>
+    </DashboardShell>
   );
 }
 
@@ -636,16 +687,19 @@ function DashboardShell({
   heading,
   count,
   error,
+  tabs,
   children,
 }: {
   heading: string;
   count: number;
   error: boolean;
+  tabs?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <main className="min-h-screen bg-bg-base px-6 pt-32 pb-16">
       <div className="max-w-6xl mx-auto">
+        {tabs}
         <h1 className="text-3xl font-bold text-text-primary mb-1">
           {heading} — Registrations
         </h1>
