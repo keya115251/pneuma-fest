@@ -103,9 +103,11 @@ type BandRegistration = {
   participant_count: number;
   city: string;
   state: string;
+  video_link: string | null;
   poc_name: string;
   poc_phone: string;
   poc_email: string;
+  poc_institution: string | null;
   status: string;
   amount_paid: number;
   payment_pending: boolean;
@@ -477,12 +479,21 @@ async function renderBandDashboard(heading: string, tabs?: ReactNode) {
                   <span>{r.participant_count}</span>
                   <span>{r.city}</span>
                   <span>{r.state}</span>
+                  <span>
+                    <FileLink url={r.video_link} />
+                  </span>
                   <span className="max-w-40 wrap-break-word" title={r.poc_name}>
                     {r.poc_name}
                   </span>
                   <span>{r.poc_phone}</span>
                   <span className="max-w-40 wrap-break-word" title={r.poc_email}>
                     {r.poc_email}
+                  </span>
+                  <span
+                    className="max-w-40 wrap-break-word"
+                    title={r.poc_institution ?? undefined}
+                  >
+                    {r.poc_institution ?? "—"}
                   </span>
                   <span className="capitalize">{r.status}</span>
                   <span>
@@ -912,7 +923,7 @@ async function buildSignedUrlMap(
 // Review/Match columns are hidden via SHOW_OCR_VERIFICATION - keep these in
 // sync with LAASYA_COLUMNS/UDC_COLUMNS/BAND_COLUMNS below.
 const GRID_16 = `repeat(${SHOW_OCR_VERIFICATION ? 16 : 14}, minmax(100px, 1fr)) 32px`;
-const GRID_12 = `repeat(${SHOW_OCR_VERIFICATION ? 12 : 11}, minmax(110px, 1fr)) 32px`;
+const GRID_12 = `repeat(${SHOW_OCR_VERIFICATION ? 14 : 13}, minmax(110px, 1fr)) 32px`;
 const GRID_11 = `repeat(11, minmax(100px, 1fr))`;
 
 const OCR_SUMMARY_COLUMNS = SHOW_OCR_VERIFICATION ? ["Review", "Match"] : [];
@@ -975,9 +986,11 @@ const BAND_COLUMNS = [
   "Members",
   "City",
   "State",
+  "Video Link",
   "POC Name",
   "POC Phone",
   "POC Email",
+  "POC Institution",
   "Status",
   "Round 1",
   "Round 2",
